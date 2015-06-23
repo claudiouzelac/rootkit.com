@@ -1,0 +1,53 @@
+00000000	0.00000000	HookIAT: DriverEntry start	
+00000001	0.00000599	HookIAT: Driver Image a63a6000 - a63a7400	
+00000002	0.00001176	HookIAT: IAT Address of: IoCreateDevice@ntoskrnl.exe: a63a6f24 [->8059f6e4]	
+00000003	0.00001676	HookIAT: IAT Address of: IoDeleteDevice@ntoskrnl.exe: a63a6f1c [->8050bfe0]	
+00000004	0.00002165	HookIAT: IAT Address of: IoCreateSymbolicLink@ntoskrnl.exe: a63a6f0c [->805cf2f0]	
+00000005	0.00002651	HookIAT: IAT Address of: IoDeleteSymbolicLink@ntoskrnl.exe: a63a6f08 [->805d42fc]	
+00000006	0.00003326	HookIAT: Patching a63a6dd4 refering to a63a6f24 [->8059f6e4] to refer to a63a7104 [->a63a65c0]	
+00000007	0.00004035	HookIAT: Patching a63a6c27 refering to a63a6f1c [->8050bfe0] to refer to a63a7114 [->a63a6638]	
+00000008	0.00004682	HookIAT: Patching a63a6dfe refering to a63a6f1c [->8050bfe0] to refer to a63a7114 [->a63a6638]	
+00000009	0.00005404	HookIAT: Patching a63a6567 refering to a63a6f0c [->805cf2f0] to refer to a63a7124 [->a63a668a]	
+00000010	0.00006086	HookIAT: Patching a63a6def refering to a63a6f0c [->805cf2f0] to refer to a63a7124 [->a63a668a]	
+00000011	0.00006767	HookIAT: Patching a63a6571 refering to a63a6f08 [->805d42fc] to refer to a63a7134 [->a63a66f2]	
+00000012	0.00007422	HookIAT: Patching a63a6c1b refering to a63a6f08 [->805d42fc] to refer to a63a7134 [->a63a66f2]	
+00000013	0.00010226	HookIAT: *** IoCreateDeviceHook: \Device\HookIAT	
+00000014	0.00012375	HookIAT: *** IoCreateSymbolicLinkHook: \DosDevices\HookIAT -> \Device\HookIAT	
+00000015	0.00012644	HookIAT: +++ Toggle hooks start	
+00000016	0.00012903	HookIAT: --- Calls should not be hooked	
+00000017	0.00015434	HookIAT: --- Calls should be hooked	
+00000018	0.00016963	HookIAT: *** IoCreateSymbolicLinkHook: \DosDevices\RelocHooker -> \Device\HookIAT	
+00000019	0.00017355	HookIAT: *** IoDeleteSymbolicLinkHook: \DosDevices\RelocHooker	
+00000020	0.00018358	HookIAT: --- Calls should not be hooked	
+00000021	0.00020337	HookIAT: --- Calls should be hooked	
+00000022	0.00021836	HookIAT: *** IoCreateSymbolicLinkHook: \DosDevices\RelocHooker -> \Device\HookIAT	
+00000023	0.00022230	HookIAT: *** IoDeleteSymbolicLinkHook: \DosDevices\RelocHooker	
+00000024	0.00023187	HookIAT: --- Calls should not be hooked	
+00000025	0.00025167	HookIAT: --- Calls should be hooked	
+00000026	0.00027299	HookIAT: *** IoCreateSymbolicLinkHook: \DosDevices\RelocHooker -> \Device\HookIAT	
+00000027	0.00027690	HookIAT: *** IoDeleteSymbolicLinkHook: \DosDevices\RelocHooker	
+00000028	0.00028656	HookIAT: --- Calls should not be hooked	
+00000029	0.00030636	HookIAT: --- Calls should be hooked	
+00000030	0.00032182	HookIAT: *** IoCreateSymbolicLinkHook: \DosDevices\RelocHooker -> \Device\HookIAT	
+00000031	0.00032572	HookIAT: *** IoDeleteSymbolicLinkHook: \DosDevices\RelocHooker	
+00000032	0.00033527	HookIAT: --- Calls should not be hooked	
+00000033	0.00035470	HookIAT: --- Calls should be hooked	
+00000034	0.00037000	HookIAT: *** IoCreateSymbolicLinkHook: \DosDevices\RelocHooker -> \Device\HookIAT	
+00000035	0.00037390	HookIAT: *** IoDeleteSymbolicLinkHook: \DosDevices\RelocHooker	
+00000036	0.00038326	HookIAT: +++ Toggle hooks stop	
+00000037	0.00038645	HookIAT: DriverEntry exit status: 00000000	
+00000038	0.00058734	HookIAT: DriverDispatch control code: 00000080	
+00000039	0.00059092	HookIAT: DriverDispatch exit status: 00000000	
+00000040	0.00070779	HookIAT: DriverDispatch control code: 00000000	
+00000041	0.00071184	HookIAT: DriverDispatch exit status: 00000000	
+00000042	0.00208690	HookIAT: DriverUnload start	
+00000043	0.00209326	HookIAT: *** IoDeleteSymbolicLinkHook: \DosDevices\HookIAT	
+00000044	0.00211152	HookIAT: *** IoDeleteDeviceHook	
+00000045	0.00211911	HookIAT: Patching a63a6dd4 refering to a63a7104 [->a63a65c0] to refer to a63a6f24 [->8059f6e4]	
+00000046	0.00212627	HookIAT: Patching a63a6c27 refering to a63a7114 [->a63a6638] to refer to a63a6f1c [->8050bfe0]	
+00000047	0.00213267	HookIAT: Patching a63a6dfe refering to a63a7114 [->a63a6638] to refer to a63a6f1c [->8050bfe0]	
+00000048	0.00214020	HookIAT: Patching a63a6567 refering to a63a7124 [->a63a668a] to refer to a63a6f0c [->805cf2f0]	
+00000049	0.00214704	HookIAT: Patching a63a6def refering to a63a7124 [->a63a668a] to refer to a63a6f0c [->805cf2f0]	
+00000050	0.00215382	HookIAT: Patching a63a6571 refering to a63a7134 [->a63a66f2] to refer to a63a6f08 [->805d42fc]	
+00000051	0.00216034	HookIAT: Patching a63a6c1b refering to a63a7134 [->a63a66f2] to refer to a63a6f08 [->805d42fc]	
+00000052	0.00216334	HookIAT: DriverUnload end	

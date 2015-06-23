@@ -1,0 +1,24 @@
+386_OBJECTS= \
+    $(_OBJ_DIR)\i386\processname.obj \
+    $(_OBJ_DIR)\i386\rootkit.obj
+
+PASS0_386_OBJECTS=
+
+IA64_OBJECTS= \
+    $(_OBJ_DIR)\ia64\processname.obj \
+    $(_OBJ_DIR)\ia64\rootkit.obj
+
+PASS0_IA64_OBJECTS=
+
+AMD64_OBJECTS= \
+    $(_OBJ_DIR)\amd64\processname.obj \
+    $(_OBJ_DIR)\amd64\rootkit.obj
+
+PASS0_AMD64_OBJECTS=
+
+ARM_OBJECTS= \
+    $(_OBJ_DIR)\arm\processname.obj \
+    $(_OBJ_DIR)\arm\rootkit.obj
+
+PASS0_ARM_OBJECTS=
+

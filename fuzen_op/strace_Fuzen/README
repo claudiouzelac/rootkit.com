@@ -1,0 +1,54 @@
+Program:    strace
+Written by: fuzen_op
+Email:      fuzen_op@yahoo.com or fuzen_op@rootkit.com
+
+This is a system call tracer for Windows NT/2000/XP. It is composed of two parts: 
+a user level program called strace.exe and a device driver called strace.sys. It
+prints messages of the form:
+
+taskmgr.exe:1148 just called Syscall: NtOpenProcess
+taskmgr.exe:1148 just called Syscall: NtClose
+taskmgr.exe:1148 just called Syscall: NtQuerySystemInformation
+taskmgr.exe:1148 just called Syscall: NtQuerySystemInformation
+taskmgr.exe:1148 just called Syscall: NtWaitForSingleObject
+taskmgr.exe:1148 just called Syscall: NtSetEvent
+
+To view these messages, you will need to download DebugView from SysInternals. 
+Just go to: http://www.sysinternals.com/ntw2k/freeware/debugview.shtml .
+
+Program Usage:
+	strace <PID> <Upper Limit>
+
+	Where PID is the process ID of the program you want to monitor and Upper Limit
+	is the upper limit on the system calls you want to see. I did this so you can 
+	filter out system calls related to the GUI. For instance, on Windows 2000
+	Advanced Server there are 0xf8 system calls exported from ntoskrnl.exe that
+	are the meat of the OS, and system calls from 1000 (decimal) and up are GUI
+	related system calls.
+
+I have dynamically obtained the names of the ntoskrnl.exe functions that begin with Zw.
+If I do not know the name, as is the case with the GUI functions, strace will just print
+the system call number. You will have to figure it out from there.
+
+
+TODO:
+	Add detailed support for function arguments. For instance, what process did 
+	NtCreateProcess just create? Any help would be greatly appreciated.
+
+Caveat:
+	I have only compiled this for Windows 2000 Advanced Server, but the code is written 
+	generic enough that you should be able to recompile on NT or XP.
+
+	Also, the binaries I have included will only run on Windows 2000/XP. See above. You
+	will definitely have to recompile for NT because the kernel in 2000/XP exports 
+	except_handler3 and NT does not so the driver is not compatible across all three.
+
+	It appears that the interrupts are different or handled differently on XP. strace.sys 
+	hooks interrupt 0x2e in the IDT. I have not been able to determine if anything actually 
+	passes through the IDT at this point. I still need to load the symbols for XP to debug 
+	this, but I do see SYSENTER and SYSCALL in a disassembly. These both appear to be two byte 
+	instructions but I am not totally sure how they work. ANY HELP WOULD BE COOL.
+
+Thanks:
+	Greg Hoglund for starting this madness. I used some code from nt-rootkit-0.44.
+	Joe for answering my questions or for making me learn the hard way.

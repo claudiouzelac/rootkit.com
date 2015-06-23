@@ -1,0 +1,7 @@
+[Batch Build]
+fu - Win32 Debug=0
+fu - Win32 Release=1
+msdirectx - Win32 Debug=0
+msdirectx - Win32 Release=0
+fudll - Win32 Debug=0
+fudll - Win32 Release=1

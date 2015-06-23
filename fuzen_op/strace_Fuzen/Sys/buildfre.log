@@ -1,0 +1,73 @@
+BUILD: Computing Include file dependencies:
+BUILD: ERROR - "f:\ntrootkit\strace\sys\sources." file time is in the future.
+BUILD: Examining f:\ntrootkit\strace\sys directory for files to compile.
+Compiling f:\ntrootkit\strace\sys directory ********************
+'nmake.exe /c BUILDMSG=Stop. -i NTTEST= UMTEST= NOLINK=1 NOPASS0=1 386=1'
+Rebuilding obj\_objects.mac from .\sources.
+obj\_objects.mac was rebuilt, please reinvoke NMAKE
+cl -nologo -Ii386\ -I. -Ic:\NTDDK\inc -Ic:\NTDDK\inc -Ic:\NTDDK\inc\ddk -Ic:\NTDDK\inc\ddk\wdm -Ic:\NTDDK\private\inc -Ic:\NTDDK\inc -D_X86_=1 -Di386=1  -DSTD_CALL -DCONDITION_HANDLING=1 -DNT_UP=1  -DNT_INST=0 -DWIN32=100 -D_NT1X_=100 -DWINNT=1 -D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_WIN32_IE=0x0501    -DWIN32_LEAN_AND_MEAN=1 -DDEVL=1 -DFPO=1    -DNDEBUG -D_DLL=1      /c /Zel /Zp8 /Gy -cbstring /W3 /Gz  /QIfdiv- /QIf /QI0f /GB /Gi- /Gm- /GX-  /GR- /GF -Z7 /Oxs /Oy   -FIc:\NTDDK\inc\warning.h  .\rk_interrupt.c
+rk_interrupt.c
+f:\ntrootkit\strace\sys\rk_interrupt.c(52) : warning C4102: 'PrintDebug' : unreferenced label
+f:\ntrootkit\strace\sys\rk_interrupt.c(52) : warning C4102: 'TestSyscallLimit' : unreferenced label
+f:\ntrootkit\strace\sys\rk_interrupt.c(52) : warning C4102: 'TestPID' : unreferenced label
+f:\ntrootkit\strace\sys\rk_interrupt.c(58) : warning C4018: '>=' : signed/unsigned mismatch
+f:\ntrootkit\strace\sys\rk_interrupt.c(107) : warning C4047: '=' : 'unsigned long *' differs in levels of indirection from 'unsigned long '
+f:\ntrootkit\strace\sys\rk_interrupt.c(114) : warning C4047: '=' : 'unsigned long *' differs in levels of indirection from 'struct _UNICODE_STRING ** '
+f:\ntrootkit\strace\sys\rk_interrupt.c(115) : warning C4047: 'function' : 'struct _UNICODE_STRING *' differs in levels of indirection from 'unsigned long '
+f:\ntrootkit\strace\sys\rk_interrupt.c(115) : warning C4024: 'RtlUnicodeStringToAnsiString' : different types for formal and actual parameter 2
+cl -nologo -Ii386\ -I. -Ic:\NTDDK\inc -Ic:\NTDDK\inc -Ic:\NTDDK\inc\ddk -Ic:\NTDDK\inc\ddk\wdm -Ic:\NTDDK\private\inc -Ic:\NTDDK\inc -D_X86_=1 -Di386=1  -DSTD_CALL -DCONDITION_HANDLING=1 -DNT_UP=1  -DNT_INST=0 -DWIN32=100 -D_NT1X_=100 -DWINNT=1 -D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_WIN32_IE=0x0501    -DWIN32_LEAN_AND_MEAN=1 -DDEVL=1 -DFPO=1    -DNDEBUG -D_DLL=1      /c /Zel /Zp8 /Gy -cbstring /W3 /Gz  /QIfdiv- /QIf /QI0f /GB /Gi- /Gm- /GX-  /GR- /GF -Z7 /Oxs /Oy   -FIc:\NTDDK\inc\warning.h  .\basic.c
+basic.c
+f:\ntrootkit\strace\sys\basic.c(224) : warning C4047: 'function' : 'struct _DEVICE_OBJECT ** ' differs in levels of indirection from 'struct _DEVICE_OBJECT *'
+f:\ntrootkit\strace\sys\basic.c(224) : warning C4024: 'IoCreateDevice' : different types for formal and actual parameter 7
+
+Stop.
+Linking f:\ntrootkit\strace\sys directory ********************
+'nmake.exe /c BUILDMSG=Stop. -i LINKONLY=1 NOPASS0=1 NTTEST= UMTEST= 386=1'
+Rebuilding obj\_objects.mac from .\sources.
+obj\_objects.mac was rebuilt, please reinvoke NMAKE
+cl -nologo -Ii386\ -I. -Ic:\NTDDK\inc -Ic:\NTDDK\inc -Ic:\NTDDK\inc\ddk -Ic:\NTDDK\inc\ddk\wdm -Ic:\NTDDK\private\inc -Ic:\NTDDK\inc -D_X86_=1 -Di386=1  -DSTD_CALL -DCONDITION_HANDLING=1 -DNT_UP=1  -DNT_INST=0 -DWIN32=100 -D_NT1X_=100 -DWINNT=1 -D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_WIN32_IE=0x0501    -DWIN32_LEAN_AND_MEAN=1 -DDEVL=1 -DFPO=1    -DNDEBUG -D_DLL=1      /c /Zel /Zp8 /Gy -cbstring /W3 /Gz  /QIfdiv- /QIf /QI0f /GB /Gi- /Gm- /GX-  /GR- /GF -Z7 /Oxs /Oy   -FIc:\NTDDK\inc\warning.h  .\basic.c
+basic.c
+f:\ntrootkit\strace\sys\basic.c(224) : warning C4047: 'function' : 'struct _DEVICE_OBJECT ** ' differs in levels of indirection from 'struct _DEVICE_OBJECT *'
+f:\ntrootkit\strace\sys\basic.c(224) : warning C4024: 'IoCreateDevice' : different types for formal and actual parameter 7
+	link -out:.\i386\strace.sys -machine:ix86 @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\nma01584.
+Microsoft (R) Incremental Linker Version 5.12.8181
+Copyright (C) Microsoft Corp 1992-1998. All rights reserved.
+
+-STACK:262144,4096 
+-MERGE:_PAGE=PAGE 
+-MERGE:_TEXT=.text 
+-SECTION:INIT,d 
+-OPT:REF 
+-OPT:ICF 
+-IGNORE:4001,4037,4039,4044,4065,4070,4078,4087,4089,4198 
+-INCREMENTAL:NO 
+-FULLBUILD 
+-FORCE:MULTIPLE 
+-NOCOMMENT 
+/release 
+-NODEFAULTLIB 
+-debug:FULL 
+-debugtype:cv 
+-version:5.00 
+-osversion:5.00 
+-optidata 
+-driver 
+-align:0x20 
+-subsystem:native,5.00 
+-base:0x10000 
+-entry:DriverEntry@8 
+-out:.\i386\strace.sys 
+objfre\i386\rk_interrupt.obj 
+objfre\i386\basic.obj 
+c:\NTDDK\libfre\i386\ntoskrnl.lib 
+c:\NTDDK\libfre\i386\hal.lib 
+c:\NTDDK\libfre\i386\wmilib.lib 
+basic.obj : warning LNK4006: _gSyscallLimit already defined in rk_interrupt.obj; second definition ignored
+basic.obj : warning LNK4006: _gProcessID already defined in rk_interrupt.obj; second definition ignored
+basic.obj : warning LNK4006: _gProcessNameOffset already defined in rk_interrupt.obj; second definition ignored
+basic.obj : warning LNK4006: _deviceNameBuffer already defined in rk_interrupt.obj; second definition ignored
+basic.obj : warning LNK4006: _deviceLinkBuffer already defined in rk_interrupt.obj; second definition ignored
+basic.obj : warning LNK4006: _name_array already defined in rk_interrupt.obj; second definition ignored
+.\i386\strace.sys : warning LNK4088: image being generated due to /FORCE option; image may not run
+
+Stop.

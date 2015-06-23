@@ -1,0 +1,5 @@
+TARGETNAME= mmHook
+TARGETPATH=BIN
+TARGETTYPE=DRIVER
+MSC_WARNING_LEVEL=/W1
+SOURCES= DriverEntry.cpp  mmHook_SupportRoutines.cpp mmHook_LowInterface.cpp mmHook_HighInterface.cpp idtHook.cpp  module.cpp 

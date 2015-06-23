@@ -1,0 +1,45 @@
+General Rules:
+
+1. A hidden driver should be compiled such that the resulting PE sections are page aligned to provide maximal performance. 
+   This is to keep code and data on separate pages as much as possible.
+
+2. Hidden drivers MUST be totally non paged.
+
+3. An effort needs to be made to keep data out of ccode sections for maximal performance. Use #pragma data_seg(".data")
+   to explicitly force global data into the .data section.
+
+4. With regards to global data access, here is 1 possible scheme. 
+
+   This scheme assumes that the hidden driver / pages are
+   capable of following a strict protocol with respect to global data access. ALL global data accesses in the driver must 
+   follow this protocol.
+
+	The protocol for accessing global (non stack data) is as follows...
+	1. The driver must raise the IRQL to DISPATCH_LEVEL.
+	2. The driver must explicitly flush the TLB entry for the page containing the global variable using the invlpg instruction.
+	3. The driver is allowed to perform the global data access.
+	4. The driver must explicitly flush the TLB entry for the page containing the global variable using the invlpg instruction.
+	5. The driver lowers the IRQL to the previous level before it was raised.
+
+    The additional restrictions also apply:
+	1. No global data can be passed to kernel API functions. When calling an API, global data, must be copied into local storage
+       on the stack and passed into the API function.
+
+	This scheme is preferable for hiding a driver that one has explicit control over (meaning, the driver is capable of following
+	the protocol). It is clearly not acceptable for hiding an arbitrary driver since there is no way to force it to follow the protocol.
+	For those cases, where it is necessary to hide data where one has minimal control over the data access pattern, a second scheme may be
+	employed like using a debugging based approach.
+	
+
+NOTE: Hiding code segments incurs a minimal performance hit with very few page faults, however, hiding data pages will always incur 
+the performance hit of approximately 1 page fault per access.  This is because in hiding data, we cannot take advantage of the split
+TLB architecture and the single DTLB must be kept empty to ensure that data accesses are properly filtered depending on who generated
+them.
+
+
+-------------------------------------------------------
+
+Update Notes:
+1. Added code to remove IDT write protection (if it exists).
+2. Improved the PE parsing code so we can hide all sections in drivers now.
+

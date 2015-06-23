@@ -1,0 +1,12 @@
+
+TARGETNAME=cfsd
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+DRIVERTYPE=FS
+
+
+TARGETLIBS= $(TARGETLIBS) \
+            $(IFSKIT_LIB_PATH)\fltMgr.lib
+
+SOURCES=cfsd.c cfsd.rc cfsddirectory.c cfsdfilter.c cfsdregistry.c
+

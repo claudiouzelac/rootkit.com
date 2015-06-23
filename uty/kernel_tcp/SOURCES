@@ -1,0 +1,27 @@
+TARGETNAME=kernel_tcp
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+C_DEFINES=$(C_DEFINES) -DNDIS_MINIPORT_DRIVER -DNDIS_WDM=1
+
+C_DEFINES=$(C_DEFINES) -DNDIS51_MINIPORT=1
+C_DEFINES=$(C_DEFINES) -DNDIS51=1
+
+TARGETLIBS=$(DDK_LIB_PATH)\ndis.lib
+
+MSC_WARING_LEVEL=/W3
+
+SOURCES=NdisHook.c	\
+		dummyprotocolfunc.c	\
+		utils.c		\
+		tcp.c			\
+		socket.c		\
+		tcp_timer.c		\
+		commAnd.c		\
+		test.c
+		
+
+
+
+
+

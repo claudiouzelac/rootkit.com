@@ -1,0 +1,6 @@
+TARGETNAME=idt_hook
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+SOURCES=idt_hook.c
+

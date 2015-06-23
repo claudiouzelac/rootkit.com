@@ -1,0 +1,36 @@
+BUILD: Computing Include file dependencies:
+BUILD: Examining c:\documents and settings\sherri\desktop\shadow walker 1.0\mmhook\src directory for files to compile.
+Compiling c:\documents and settings\sherri\desktop\shadow walker 1.0\mmhook\src directory ********************
+'nmake.exe /c BUILDMSG=Stop. -i NTTEST= UMTEST= NOLINK=1 NOPASS0=1 386=1'
+	jvc /nologo /cp K:\DDK\public\sdk\classes\afc.zip;K:\DDK\public\sdk\classes\classes.zip;C:\DocumentsandSettings\Sherri\Desktop\ShadowWalker1.0\mmHook\src; /O /w4 /d objfre\i386 
+'jvc' is not recognized as an internal or external command,
+operable program or batch file.
+	jvc /nologo /cp K:\DDK\public\sdk\classes\afc.zip;K:\DDK\public\sdk\classes\classes.zip;C:\DocumentsandSettings\Sherri\Desktop\ShadowWalker1.0\mmHook\src; /O /w4 /d objfre\i386 
+'jvc' is not recognized as an internal or external command,
+operable program or batch file.
+	jvc /nologo /cp K:\DDK\public\sdk\classes\afc.zip;K:\DDK\public\sdk\classes\classes.zip;C:\DocumentsandSettings\Sherri\Desktop\ShadowWalker1.0\mmHook\src; /O /w4 /d objfre\i386 
+'jvc' is not recognized as an internal or external command,
+operable program or batch file.
+	jvc /nologo /cp K:\DDK\public\sdk\classes\afc.zip;K:\DDK\public\sdk\classes\classes.zip;C:\DocumentsandSettings\Sherri\Desktop\ShadowWalker1.0\mmHook\src; /O /w4 /d objfre\i386 
+'jvc' is not recognized as an internal or external command,
+operable program or batch file.
+	jvc /nologo /cp K:\DDK\public\sdk\classes\afc.zip;K:\DDK\public\sdk\classes\classes.zip;C:\DocumentsandSettings\Sherri\Desktop\ShadowWalker1.0\mmHook\src; /O /w4 /d objfre\i386 
+'jvc' is not recognized as an internal or external command,
+operable program or batch file.
+Linking c:\documents and settings\sherri\desktop\shadow walker 1.0\mmhook\src directory ********************
+'nmake.exe /c BUILDMSG=Stop. -i LINKONLY=1 NOPASS0=1 NTTEST= UMTEST= 386=1'
+	jvc /nologo /cp K:\DDK\public\sdk\classes\afc.zip;K:\DDK\public\sdk\classes\classes.zip;C:\DocumentsandSettings\Sherri\Desktop\ShadowWalker1.0\mmHook\src; /O /w4 /d objfre\i386 
+'jvc' is not recognized as an internal or external command,
+operable program or batch file.
+	jvc /nologo /cp K:\DDK\public\sdk\classes\afc.zip;K:\DDK\public\sdk\classes\classes.zip;C:\DocumentsandSettings\Sherri\Desktop\ShadowWalker1.0\mmHook\src; /O /w4 /d objfre\i386 
+'jvc' is not recognized as an internal or external command,
+operable program or batch file.
+	jvc /nologo /cp K:\DDK\public\sdk\classes\afc.zip;K:\DDK\public\sdk\classes\classes.zip;C:\DocumentsandSettings\Sherri\Desktop\ShadowWalker1.0\mmHook\src; /O /w4 /d objfre\i386 
+'jvc' is not recognized as an internal or external command,
+operable program or batch file.
+	jvc /nologo /cp K:\DDK\public\sdk\classes\afc.zip;K:\DDK\public\sdk\classes\classes.zip;C:\DocumentsandSettings\Sherri\Desktop\ShadowWalker1.0\mmHook\src; /O /w4 /d objfre\i386 
+'jvc' is not recognized as an internal or external command,
+operable program or batch file.
+	jvc /nologo /cp K:\DDK\public\sdk\classes\afc.zip;K:\DDK\public\sdk\classes\classes.zip;C:\DocumentsandSettings\Sherri\Desktop\ShadowWalker1.0\mmHook\src; /O /w4 /d objfre\i386 
+'jvc' is not recognized as an internal or external command,
+operable program or batch file.

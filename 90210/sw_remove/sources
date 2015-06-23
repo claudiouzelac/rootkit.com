@@ -1,0 +1,18 @@
+TARGETNAME=sw_remove
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+
+INCLUDES = ..\inc
+
+
+
+TARGETLIBS=.\catchy32.lib
+
+SOURCES= sw_remove.c \
+         codewalk.c \
+         multicpu.c \
+         util.c \
+         bruteforcer.c \
+         int0e.c \
+         idt.c \

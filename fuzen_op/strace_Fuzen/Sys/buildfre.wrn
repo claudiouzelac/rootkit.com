@@ -1,0 +1,19 @@
+rk_interrupt.c(52) : warning C4102: 'PrintDebug' : unreferenced label
+rk_interrupt.c(52) : warning C4102: 'TestSyscallLimit' : unreferenced label
+rk_interrupt.c(52) : warning C4102: 'TestPID' : unreferenced label
+rk_interrupt.c(58) : warning C4018: '>=' : signed/unsigned mismatch
+rk_interrupt.c(107) : warning C4047: '=' : 'unsigned long *' differs in levels of indirection from 'unsigned long '
+rk_interrupt.c(114) : warning C4047: '=' : 'unsigned long *' differs in levels of indirection from 'struct _UNICODE_STRING ** '
+rk_interrupt.c(115) : warning C4047: 'function' : 'struct _UNICODE_STRING *' differs in levels of indirection from 'unsigned long '
+rk_interrupt.c(115) : warning C4024: 'RtlUnicodeStringToAnsiString' : different types for formal and actual parameter 2
+basic.c(224) : warning C4047: 'function' : 'struct _DEVICE_OBJECT ** ' differs in levels of indirection from 'struct _DEVICE_OBJECT *'
+basic.c(224) : warning C4024: 'IoCreateDevice' : different types for formal and actual parameter 7
+basic.c(224) : warning C4047: 'function' : 'struct _DEVICE_OBJECT ** ' differs in levels of indirection from 'struct _DEVICE_OBJECT *'
+basic.c(224) : warning C4024: 'IoCreateDevice' : different types for formal and actual parameter 7
+basic.obj() : warning LNK4006: _gSyscallLimit already defined in rk_interrupt.obj; second definition ignored
+basic.obj() : warning LNK4006: _gProcessID already defined in rk_interrupt.obj; second definition ignored
+basic.obj() : warning LNK4006: _gProcessNameOffset already defined in rk_interrupt.obj; second definition ignored
+basic.obj() : warning LNK4006: _deviceNameBuffer already defined in rk_interrupt.obj; second definition ignored
+basic.obj() : warning LNK4006: _deviceLinkBuffer already defined in rk_interrupt.obj; second definition ignored
+basic.obj() : warning LNK4006: _name_array already defined in rk_interrupt.obj; second definition ignored
+i386\strace.sys() : warning LNK4088: image being generated due to /FORCE option; image may not run

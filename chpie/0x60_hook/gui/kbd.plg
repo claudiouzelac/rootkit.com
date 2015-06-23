@@ -1,0 +1,36 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: kbd - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\chpie\LOCALS~1\Temp\RSPB.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"Debug/kbd.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Documents and Settings\chpie\바탕 화면\키보드\source\gui\kbd.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\chpie\LOCALS~1\Temp\RSPB.tmp" 
+Creating temporary file "C:\DOCUME~1\chpie\LOCALS~1\Temp\RSPC.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/kbd.pdb" /debug /machine:I386 /out:"Debug/kbd.exe" /pdbtype:sept 
+".\Debug\driver.obj"
+".\Debug\kbd.obj"
+".\Debug\keyboard.obj"
+".\Debug\kbd.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\chpie\LOCALS~1\Temp\RSPC.tmp"
+<h3>Output Window</h3>
+Compiling...
+kbd.c
+Linking...
+LINK : LNK6004: Debug/kbd.exe not found or not built by the last incremental link; performing full link
+
+
+
+<h3>Results</h3>
+kbd.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

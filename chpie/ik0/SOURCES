@@ -1,0 +1,6 @@
+TARGETNAME=idt_cloak
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+SOURCES=idtclk.c
+

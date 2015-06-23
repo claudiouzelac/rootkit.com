@@ -1,0 +1,36 @@
+Process Master v1.2
+===================
+
+Main
+----
+
+Process Master v1.2 by Holy_Father <holy_father@phreaker.net> 
+Copyright (c) 2000,forever ExEwORx
+birthday: 27.06.2003
+home: http://rootkit.host.sk
+licence: this program is open source with GPL licence
+
+	Process Master is prolly the best process killer for NT boxes. It also 
+shows many informations about process. Run with -? flag to get usage. Main 
+program is written in Delphi 6 + asm. Driver is written in C. Source included.
+And be careful when killing system processes :)
+
+
+Files
+-----
+
+	original archive contains these files:
+
+pm.dpr		42 137 b	- delphi source for the main program
+pm.c		 5 251 b	- c source for driver
+pm.h		 1 066 b	- c header for driver 
+pm.exe		37 888 b	- main program executable
+pm.res		 2 488 b	- binary resource with .sys driver
+pm.txt		   984 b	- this readme
+
+
+Version
+-------
+
+1.2	x	XP long name bug fix
+1.1	+	process path and command line in detailed process info 

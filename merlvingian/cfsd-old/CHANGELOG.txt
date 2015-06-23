@@ -1,0 +1,7 @@
+11/10/05 
+- Added a user mode utility to be able to change the file name to be matched and removed in the driver.
+- Added registry entries to be able to control the attach criteria. Check cfsd.inf. If you already had the driver installed jsut right click install the .inf over the old, it will add the new entries.
+- Made many changes to logic and flow of the code.
+- Last release of kludged together pieces of code. ALL changes from this release on will be documented and attached to revision and patch level numbers.
+- This release is just a quick kludge to allow more interaction with the driver for those who cannot recompile it.
+- Soon as the next evolution is release this entry will be removed and the starting base point will be there.

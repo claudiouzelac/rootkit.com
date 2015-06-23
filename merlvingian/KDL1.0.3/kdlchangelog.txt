@@ -1,0 +1,24 @@
+:[10/05/05]: Version 1.0.1
+
+kld.h, kdl.c - Removed the registry structure and used a single variable gRegistryPath.
+
+Added kdlx86.inf as another entry point for installation. Right click on the file and chose install.
+
+Added (kdl.h)LARGE_INTEGER theEOF; to _DEVICE_EXTENSION so we can append key data to the end of the logfile. Also modified (kdlfile.c/CreateLogFile)ZwCreateFile() DesiredAccess to SYNCHRONIZE | FILE_WRITE_DATA | FILE_WRITE_ATTRIBUTES | FILE_WRITE_EA. And (kdlfile.c/WriteDataFile)ZwWriteFile() ByteOffset &theDeviceExtension->theEOF. This appears to have solved the problem with key data being appended to the log file.
+
+
+:[10/09/05]: Version 1.0.2
+
+- Cleaning up the code a bit as I learn more about device drivers
+
+Added (kdl.h)ExFreePoolWithTag( a, b ) ExFreePool( (a) ) MACRO for cleaner win2k compatability.
+Changed (kdl.c)"for ( i=0; i < IRP_MJ_MAXIMUM_FUNCTION; i++ )" into " for ( i=0; i <= IRP_MJ_MAXIMUM_FUNCTION; i++ )".
+Added (kdl.h)#defien tags for ExAllocatePoolWithTag() functions.
+Changed (kdlx86.inf) "StartType = 3" into "StartType = 0" to prompt for a restart after installation.
+
+:[10/11/05]: Version 1.0.3
+
+Changed install.bat into loaderinstall.bat and uninstall.bat into loaderunistall.bat. Name change only.
+Created infinstall.cmd and infuninstall.cmd as alternates to using the kdl.exe loader
+ New file infinstall.cmd as an alternate to right clicking and choosing install from the kdlx86.inf file.
+ New file infuninstall.cmd as an alternate to using kdl.exe loader to uninstall the driver.

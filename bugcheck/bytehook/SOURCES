@@ -1,0 +1,13 @@
+TARGETNAME=bytehook
+TARGETPATH=build
+TARGETTYPE=DRIVER
+TARGETLIBS=$(DDK_LIB_PATH)\ntoskrnl.lib
+
+C_DEFINES= $(C_DEFINES)  # -DSVV22
+
+INCLUDES=.\
+
+SOURCES=bytehook.c
+
+        
+        

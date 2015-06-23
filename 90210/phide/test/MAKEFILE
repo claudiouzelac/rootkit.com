@@ -1,0 +1,14 @@
+.autodepend
+
+NAME = test
+OBJS = $(NAME).obj phide.obj
+
+IMPORT=import32
+
+
+$(NAME).exe: $(OBJS) $(DEF)
+  tlink32 /Tpe /c /x $(OBJS),$(NAME),, $(IMPORT)
+  @del $(NAME).obj
+
+.asm.obj:
+   tasm32 /m9 /ml /zn $&.asm

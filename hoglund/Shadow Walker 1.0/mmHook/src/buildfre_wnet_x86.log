@@ -1,0 +1,50 @@
+BUILD: Computing Include file dependencies:
+BUILD: Examining d:\shadow\mmhook directory for files to compile.
+Compiling d:\shadow\mmhook directory ********************
+'nmake.exe /c BUILDMSG=Stop. -i NTTEST= UMTEST= NOLINK=1 NOPASS0=1 386=1'
+cl -nologo -Ii386\ -I. -IC:\WINDDK\3790\inc\mfc42 -Iobjfre_wnet_x86\i386 -IC:\WINDDK\3790\inc\wnet -IC:\WINDDK\3790\inc\wnet -IC:\WINDDK\3790\inc\ddk\wnet -IC:\WINDDK\3790\inc\ddk\wdm\wnet -IC:\WINDDK\3790\inc\crt -D_X86_=1 -Di386=1  -DSTD_CALL -DCONDITION_HANDLING=1   -DNT_INST=0 -DWIN32=100 -D_NT1X_=100 -DWINNT=1 -D_WIN32_WINNT=0x0502 /DWINVER=0x0502 -D_WIN32_IE=0x0600    -DWIN32_LEAN_AND_MEAN=1 -DDEVL=1 -D__BUILDMACHINE__=WinDDK -DFPO=1  -DNDEBUG -D_DLL=1      /c /Zel /Zp8 /Gy /Gi- /Gm- -cbstring /W1 /WX /Gz  /QIfdiv- /G6 /GX-  /GR- /GF /GS -Z7 /Oxs  /Oy   -FIC:\WINDDK\3790\inc\wnet\warning.h     .\mmhook_highinterface.cpp 
+mmhook_highinterface.cpp
+
+Stop.
+Linking d:\shadow\mmhook directory ********************
+'nmake.exe /c BUILDMSG=Stop. -i LINKONLY=1 NOPASS0=1 NTTEST= UMTEST= 386=1'
+	link -out:BIN\i386\mmHook.sys -machine:ix86 @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\nmDE.tmp
+Microsoft (R) Incremental Linker Version 7.10.2179
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+-MERGE:_PAGE=PAGE 
+-MERGE:_TEXT=.text 
+-SECTION:INIT,d 
+-OPT:REF 
+-OPT:ICF 
+-IGNORE:4198,4010,4037,4039,4065,4070,4078,4087,4089,4221 
+-INCREMENTAL:NO 
+-FULLBUILD 
+/release 
+-NODEFAULTLIB 
+/WX 
+-debug:FULL 
+-debugtype:cv 
+-version:5.2 
+-osversion:5.2 
+-STACK:0x40000,0x1000 
+-driver 
+-base:0x10000 
+-subsystem:native,5.02 
+-entry:GsDriverEntry@8 
+-out:BIN\i386\mmHook.sys 
+objfre_wnet_x86\i386\driverentry.obj 
+objfre_wnet_x86\i386\mmhook_supportroutines.obj 
+objfre_wnet_x86\i386\mmhook_lowinterface.obj 
+objfre_wnet_x86\i386\mmhook_highinterface.obj 
+objfre_wnet_x86\i386\idthook.obj 
+objfre_wnet_x86\i386\module.obj 
+C:\WINDDK\3790\lib\wnet\i386\BufferOverflowK.lib 
+C:\WINDDK\3790\lib\wnet\i386\ntoskrnl.lib 
+C:\WINDDK\3790\lib\wnet\i386\ntoskrnl.lib 
+C:\WINDDK\3790\lib\wnet\i386\hal.lib 
+C:\WINDDK\3790\lib\wnet\i386\wmilib.lib 
+	echo Skip Binplace:
+Skip Binplace:
+
+Stop.

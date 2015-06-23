@@ -1,0 +1,6 @@
+if a single file in a directory is hiden you cannot delte the directory,you will get a directory not empty error.
+If more entries then what are hidden are present in the directory deletion is possible.
+
+
+
+from a command line you can use tab auto complete to fill in the file name that is hidden. It will still hide the file but it will allow it to be deleted. Need to fileter other IRP_MJ_XXX calls to prevent this situation.

@@ -1,0 +1,38 @@
+BUILD: Computing Include file dependencies:
+BUILD: Examining c:\rootkit_class\vegas_04\basic_1 directory for files to compile.
+Linking c:\rootkit_class\vegas_04\basic_1 directory ********************
+'nmake.exe /c BUILDMSG=Stop. -i LINKONLY=1 NOPASS0=1 NTTEST= UMTEST= 386=1'
+	link -out:objchk\i386\MSNBCVID.sys -machine:ix86 @C:\DOCUME~1\demo\LOCALS~1\Temp\nma02788.
+Microsoft (R) Incremental Linker Version 7.00.9210
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+-MERGE:_PAGE=PAGE 
+-MERGE:_TEXT=.text 
+-SECTION:INIT,d 
+-OPT:REF 
+-OPT:ICF 
+-IGNORE:4010,4037,4039,4065,4070,4078,4087,4089,4198,4221 
+-INCREMENTAL:NO 
+-FULLBUILD 
+/release 
+-NODEFAULTLIB 
+/WX 
+-debug:FULL 
+-debugtype:cv 
+-version:5.1 
+-osversion:5.1 
+/opt:nowin98 
+-STACK:0x40000,0x1000 
+-driver 
+-base:0x10000 
+-align:0x80 
+-subsystem:native,5.1 
+-entry:DriverEntry@8 
+-out:objchk\i386\MSNBCVID.sys 
+objchk\i386\basic.obj 
+C:\WINDDK\2600\lib\wxp\i386\ntoskrnl.lib 
+C:\WINDDK\2600\lib\wxp\i386\hal.lib 
+C:\WINDDK\2600\lib\wxp\i386\wmilib.lib 
+Skip Binplace:
+
+Stop.

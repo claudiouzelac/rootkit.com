@@ -1,0 +1,20 @@
+11/10/05 
+- Added a user mode utility to be able to change the file name to be matched and removed in the driver.
+- Added registry entries to be able to control the attach criteria. Check cfsd.inf. If you already had the driver installed jsut right click install the .inf over the old, it will add the new entries.
+- Made many changes to logic and flow of the code.
+- Last release of kludged together pieces of code. ALL changes from this release on will be documented and attached to revision and patch level numbers.
+- This release is just a quick kludge to allow more interaction with the driver for those who cannot recompile it.
+- Soon as the next evolution is release this entry will be removed and the starting base point will be there.
+
+
+11/16/05
+- Added IRP_MJ_create.c(h) for acccess control
+- Added IRP_MJ_setinformation.c(h) for file information control
+- Added dbgmsgs for detachment of devices
+- Added Ability to for the driver to refuse 'net stop cfsd' and 'fltmc unload cfsd' commands
+- changed source file names to be more reflective of purpose
+- Debug registry entry to add more granularity to what spam is sent out in debug mode
+- Added registry keys for attach method, file device, file system, and debug
+- many code changes
+- This is still a kludge in alot of ways so guess this is another hacked release. Probably a lot more changes I forgot
+about or failed to mention. When I can find the time I will write a more detailed change log, felt guilty it has been so long since I have released. Alot of the code is poorly optimized and is still being used as a crutch to learn as it developes.

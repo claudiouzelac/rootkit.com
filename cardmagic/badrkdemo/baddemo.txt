@@ -1,0 +1,35 @@
+
+A simple .exe that demonstrate bad behaviors of a rootkit.
+Its driver simply hides some elements from modern detectors and autostarts when operating system starts.
+It ouputs debug information in every 25 seconds.(can be viewed through DbgView or DriverMoniter).
+
+Intro:
+the initial thought of this is from vxk's friend atm's work, 
+he has written one with a similar implementation(I mentioned on my blog of rootkit.com).
+I asked him for a copy,but failed...so make it myself
+but this demo is quite incomplete,
+because I don't have time to continue working on it.
+It can be further implemented if you are interested.
+the detail implementaion of this simple demo can also be requested . 
+
+ 
+Environment:
+Windows XP sp2.
+I only design and test it under winXP sp2.other OS may get a crush.
+
+How to stop the demo:
+to remove it,you should use registry part of DarkSpy anti-rootkit 1.0.5. 
+(1).Select HKEY_LOCAL_MACHINE\SYSTEM,then click "Online Analyze".
+(2).select ControlSetXXX\services\#BadRKDemo# in the pop up dialog's tree control.
+here the value of "XXX" will display on the registry page of DarkSpy Mainframe.
+(3).change the value "start" to 3 
+(4).normally restart your computer. 
+
+Warning :
+before running it,make sure you have the ablity to stop it(understand the above well),
+and don't run it on your important machine.
+
+Use it at your own risk.
+
+
+

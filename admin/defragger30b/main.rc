@@ -1,0 +1,251 @@
+#include "windows.h"
+#include "resource.h"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_MAIN                "Defragger 3.0beta"
+    IDC_MAIN                "DEFRAGGER"
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MAIN                ICON    DISCARDABLE     "main.ico"
+IDI_SMALL               ICON    DISCARDABLE     "small.ico"
+IDI_MFT                 ICON    DISCARDABLE     "mft.ico"
+IDI_FRAG                ICON    DISCARDABLE     "frag.ico"
+IDI_COMP                ICON    DISCARDABLE     "comp.ico"
+IDI_DIR                 ICON    DISCARDABLE     "dir.ico"
+IDI_FILE                ICON    DISCARDABLE     "file.ico"
+IDI_FREE                ICON    DISCARDABLE     "free.ico"
+IDI_SYSTEM              ICON    DISCARDABLE     "system.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDC_MAIN MENU DISCARDABLE 
+BEGIN
+    POPUP "De&frag"
+    BEGIN
+        MENUITEM "&Analyze\tF5",                IDM_ANALYZE
+        MENUITEM "Defrag &Fragmented\tF7",      IDM_DEFRAGFRAGS
+        MENUITEM "Defrag Free &Space\tF8",      IDM_DEFRAGFREE
+        MENUITEM "&Defrag Fragmented && Free Space\tF9", IDM_DEFRAG
+        MENUITEM SEPARATOR
+        MENUITEM "Defrag by sor&ting Directories\tF10", IDM_DIRECTORYDEFRAG
+        MENUITEM SEPARATOR
+        POPUP "&Ignore files greater than ..."
+        BEGIN
+            MENUITEM "&No limit",                   IDM_LNO
+            MENUITEM SEPARATOR
+            MENUITEM "2&0 MB",                      IDM_L20
+            MENUITEM "&50 MB",                      IDM_L50
+            MENUITEM "&100 MB",                     IDM_L100
+            MENUITEM "&250 MB",                     IDM_L250
+            MENUITEM "500 &MB",                     IDM_L500
+            MENUITEM "&650 MB",                     IDM_L650
+            MENUITEM "&700 MB",                     IDM_L700
+            MENUITEM "&800 MB",                     IDM_L800
+            MENUITEM "1 &GB",                       IDM_L1000
+            MENUITEM "2 G&B",                       IDM_L2000
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tAlt+X",                IDM_EXIT
+        MENUITEM "&Stop\tEscape",               IDM_STOP, INACTIVE
+    END
+    POPUP "&Drives"
+    BEGIN
+        MENUITEM "Refresh Drive List",          IDM_REFRESH
+        MENUITEM "Select Drives (• is already marked)", IDM_DRIVELIST
+        MENUITEM SEPARATOR
+    END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "Show ""&Large File"" marks\tCtrl+L", IDM_SHOWMARKS
+        POPUP "&Blocksize"
+        BEGIN
+            MENUITEM "&1\tCtrl+1",                  IDM_B1
+            MENUITEM "&2\tCtrl+2",                  IDM_B3
+            MENUITEM "&4\tCtrl+3",                  IDM_B5
+            MENUITEM "&6\tCtrl+4",                  IDM_B7
+            MENUITEM "&8\tCtrl+5",                  IDM_B9
+            MENUITEM "1&0\tCtrl+6",                 IDM_B11
+            MENUITEM "12\t&Ctrl+7",                 IDM_B13
+            MENUITEM "14\tC&trl+8",                 IDM_B15
+            MENUITEM "16\tCt&rl+9",                 IDM_B17
+            MENUITEM "18\tCtr&l+0",                 IDM_B19
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Clustervie&wer\tCtrl+W",      IDM_CLUSTERVIEW
+        MENUITEM "Drive-&Information\tCtrl+I",  IDM_DRIVEINFO
+        MENUITEM SEPARATOR
+        POPUP "&Process-Priority"
+        BEGIN
+            MENUITEM "&Below Normal",               IDM_PPBELOWNORMAL
+            MENUITEM "&Normal",                     IDM_PPNORMAL
+            MENUITEM "&Above Normal",               IDM_PPABOVENORMAL
+        END
+        MENUITEM SEPARATOR
+    END
+    MENUITEM "&Info",                       IDM_ABOUT
+END
+
+IDC_FILE MENU DISCARDABLE 
+BEGIN
+    POPUP "&File", INACTIVE
+    BEGIN
+        MENUITEM "&Defrag only this file",      IDM_DEFRAGTHIS
+        MENUITEM "&Browse in Explorer",         IDM_BROWSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Hide Clusterviewer",         IDM_HIDECV
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDC_MAIN ACCELERATORS MOVEABLE PURE 
+BEGIN
+    "/",            IDM_ABOUT,              ASCII,  ALT, NOINVERT
+    "1",            IDM_B1,                 VIRTKEY, CONTROL, NOINVERT
+    "2",            IDM_B3,                 VIRTKEY, CONTROL, NOINVERT
+    "3",            IDM_B5,                 VIRTKEY, CONTROL, NOINVERT
+    "4",            IDM_B7,                 VIRTKEY, CONTROL, NOINVERT
+    "5",            IDM_B9,                 VIRTKEY, CONTROL, NOINVERT
+    "6",            IDM_B11,                VIRTKEY, CONTROL, NOINVERT
+    "7",            IDM_B13,                VIRTKEY, CONTROL, NOINVERT
+    "8",            IDM_B15,                VIRTKEY, CONTROL, NOINVERT
+    "9",            IDM_B17,                VIRTKEY, CONTROL, NOINVERT
+    "0",            IDM_B19,                VIRTKEY, CONTROL, NOINVERT
+    "?",            IDM_ABOUT,              ASCII,  ALT, NOINVERT
+    "G",            IDC_FIND,               VIRTKEY, ALT, NOINVERT
+    "I",            IDM_DRIVEINFO,          VIRTKEY, CONTROL, NOINVERT
+    "L",            IDM_SHOWMARKS,          VIRTKEY, CONTROL, NOINVERT
+    VK_ESCAPE,      IDM_ESCAPE,             VIRTKEY, NOINVERT
+    VK_F1,          IDM_ABOUT,              VIRTKEY, NOINVERT
+    VK_F10,         IDM_DIRECTORYDEFRAG,    VIRTKEY, NOINVERT
+    VK_F5,          IDM_ANALYZE,            VIRTKEY, NOINVERT
+    VK_F7,          IDM_DEFRAGFRAGS,        VIRTKEY, NOINVERT
+    VK_F8,          IDM_DEFRAGFREE,         VIRTKEY, NOINVERT
+    VK_F9,          IDM_DEFRAG,             VIRTKEY, NOINVERT
+    "W",            IDM_CLUSTERVIEW,        VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EXIT,               VIRTKEY, ALT, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  22, 17, 207, 142
+STYLE DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
+CAPTION "Info"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Legend",IDC_STATIC,4,0,199,56
+    LTEXT           "directory",IDC_STATIC,21,11,84,8
+    LTEXT           "normal files",IDC_STATIC,21,19,84,8
+    LTEXT           "file bigger than sizelimit",IDC_STATIC,21,27,84,8
+    LTEXT           "fragmented file/directory",IDC_STATIC,21,35,84,8
+    LTEXT           "system file",IDC_STATIC,21,43,84,8
+    LTEXT           "MasterFileTable (NTFS)",IDC_STATIC,116,11,79,8
+    LTEXT           "free space",IDC_STATIC,116,27,79,8
+    LTEXT           "compressed file (NTFS)",IDC_STATIC,116,19,79,8
+    LTEXT           "writing block",IDC_STATIC,116,35,79,8
+    LTEXT           "reading block",IDC_STATIC,116,43,79,8
+    CTEXT           "simple defragger for FAT32 and NTFS partitions",
+                    IDC_STATIC,3,82,200,8
+    CTEXT           "on Windows NT/2K/XP - works best on NTFS",IDC_STATIC,3,
+                    91,200,8
+    CTEXT           "Too slow? Deactivate your virus-scanner.",IDC_STATIC,3,
+                    100,200,8
+    CTEXT           "..Directories on FAT / System files will not be moved..",
+                    IDC_STATIC,3,109,200,8
+    DEFPUSHBUTTON   "OK",IDOK,148,123,49,14,WS_GROUP
+    EDITTEXT        IDC_LINK,7,124,128,13,ES_CENTER | ES_READONLY
+    CTEXT           "Bearbeiten",IDC_UPTIME,5,70,196,9
+    CTEXT           "Bearbeiten",IDC_OS,5,59,196,9
+END
+
+IDD_CLUSTERVIEW DIALOGEX 0, 0, 316, 118
+STYLE DS_SETFOREGROUND | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Clusterviewer"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "Startcluster",IDC_STATIC0,2,3,36,8
+    EDITTEXT        IDC_CLUSTERNO,38,0,48,14,ES_RIGHT | ES_AUTOHSCROLL | 
+                    ES_NUMBER | WS_GROUP
+    SCROLLBAR       IDC_SCROLL,86,0,17,14,WS_GROUP | WS_TABSTOP
+    PUSHBUTTON      "&search",IDC_FIND,191,0,44,14,WS_GROUP
+    CONTROL         "List1",IDC_CLUSTERLIST,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOLABELWRAP | 
+                    LVS_EDITLABELS | LVS_ALIGNLEFT | LVS_NOSORTHEADER | 
+                    WS_GROUP | WS_TABSTOP,1,16,313,100,WS_EX_STATICEDGE
+    PUSHBUTTON      "defrag",IDC_DEFRAG,245,0,33,14,WS_DISABLED
+    PUSHBUTTON      "browse",IDC_BROWSE,281,0,33,14,WS_DISABLED
+    COMBOBOX        IDC_FILENAME,103,0,85,13,CBS_DROPDOWN | 
+                    CBS_OWNERDRAWVARIABLE | CBS_AUTOHSCROLL | CBS_SORT | 
+                    CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 3,0,0,0
+ PRODUCTVERSION 3,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x3L
+#else
+ FILEFLAGS 0x2L
+#endif
+ FILEOS 0x40000L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "000004b0"
+        BEGIN
+            VALUE "CompanyName", "blume homeproductions\0"
+            VALUE "FileDescription", "Defragger 3.0beta for NT/2k/XP\0"
+            VALUE "FileVersion", "3,0\0"
+            VALUE "ProductVersion", "3,0\0"
+            VALUE "ProductName", "Defragger\0"
+            VALUE "InternalName", "defragger\0"
+            VALUE "OriginalFilename", "defragger.exe\0"
+            VALUE "LegalCopyright", "freeware\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0, 1200
+    END
+END
+
+#endif    // !_MAC

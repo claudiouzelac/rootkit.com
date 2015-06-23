@@ -1,0 +1,52 @@
+Hi All,
+
+It's been several weeks since Jamie and my talk at Black Hat about Shadow Walker. Sorry to keep everyone in suspense regarding the code release ;) I don't know about Jamie, but I'm still struggling to get out of "vacation mode", hehe :) Well, that and I'm an incorrigible perfectionist at times. I've kept thinking I'd get back into work mode and iron out some of the issues in the proof of concept implementation before release. Nevertheless, after seeing 90210's post about Shadow Walker detection, I've decided to just throw it out into the community for feedback / improvements. It's cool to see some folks in the community interested in actively building up / improving / detecting SW... After all, thats really the whole point of the project... to incrementally raise the bar for rootkit detection and to spur some new developments in existing rk technology :) 
+
+Ok, so about Shadow Walker version 1.0 for those of you who didn't attend Black Hat / Defcon or read the Phrack article yet...
+
+1. What is Shadow Walker?
+
+Shadow Walker demonstrates a simple implementation of virtual memory "hooking" and it's potential application to advanced kernel rootkits.  Joanna Rutkowska touched upon some of the possiblites for virtual memory subversion in her Chamelon Project paper, but did not provide many practical implementation details or code. We use Shadow Walker to present a practical, if simplistic, working model that is based upon an inverted software implementation of non executable memory semantics described in the UNIX PaX project documentation. Whereas, PaX provides read /write - no execute memory semantics for the purpose of providing buffer overflow protection, we provide execute - diverted read / write semantics for the purpose of hiding executable code. Consequently SW is,ironically, a perversion of an an originally defensive technology. In practical terms, this means that a hidden rootkit driver's code will execute normally, but any read / writes to that region of memory will be deflected to a different "clean" physical frame. As such, SW provides a sort of memory hooking at the ASM level for data read / write instructions which is invisible to user level applications or other kernel drivers that rely upon the integrity of the virtual memory subsystem. At the core, we exploit the x86 split TLB architecture. The TLB is a high speed cache used to hold frequently accessed virtual to physical address mapping information. Since the x86 uses seperate TLB's for code and data, the ITLB and DTLB respectively, our goal is to desyncronize them such that the ITLB contains different mapping information from the DTLB. This allows us to filter execute memory accesses from read / write memory accessses. Because we are taking full advantage of the existing hardware cache on the memory access path, the practical advantage to this approach is that there is virtually no noticible performance impact. A more detailed discussion of the process is provided in our Phrack 63 article.
+
+
+2. What Shadow Walker is NOT.
+
+Shadow Walker is not a fully functional or weaponized rootkit in its present form. It's authors acknowledge that it is *easily* detected in its current form and that there are several issues which need to be addressed to make it truly stealthy. Shadow walker is not so much of a "rootkit" as it is a proof of concept implementation of a single, cutting edge "rootkit technique". We hope to expand SW into more of a fully featured rootkit in the future. Clearly, no rootkit is truly undetectable, but we can go a long way towards making it hard as hell for scanners ;) 
+
+
+3. (Disclaimers ;)... Known Issues & Room For Improvement:
+
+a. For simplicity, SW currently hides only 4k sized kernel mode memory pages. If we added some code to track context, user land page hiding could be easily added.
+
+b. We do not support hyperthreading or multi-processors. Supporting these introduces some added complexity with regards to synchronization that we aren't dealing with right now. If you have hyperthreading and want to test the driver you must turn it off! SW WILL crash and burn!
+
+c. We do not support PAE.
+
+d. We assume the standard 2GB / 2GB, kernel / user memory layout. Some Windows OS's have an optional address space layout (1 GB / 3GB, kernel / user). The checking code for this is not in there.
+
+e. We do not currently make any effort to hide the PF handler or the IDT hook. This makes the current implementation trivially detectable and will be addressed in future versions.
+
+f. The current implementation consists of 2 drivers: a memory hook driver and a modified FU rootkit driver. The memory hook driver hides the FU rootkit driver, but does not currently make any effort to hide itself. This also makes it trivially detectable and will be addressed in future versions.
+
+g. The  code has been tested only on Win2k and WinXP so its stability on other systems is not guaranteed... In fact, its stability is not guaranteed at all ;) Use at your own risk! We will however greatly appreciate bug reports so we can improve things :)
+
+h. We realize that the basis of this technique is exploitation of *virtual* memory, NOT *physical* memory... Just an advance acknowlegement of its limitations for all of you who will raise those particular objections ;). 
+
+i. We haven't been successful in hiding ntoskrnl.exe yet. Ntoskrnl resides on a large, 4MB page... right along with KiTrap0E and all of the other OS interrupt handlers. Taking page faults on the page containing other interrupt handlers poses some interesting problems that have resulted in crashes ;) There are probably some issues with interrupt priorities cropping up here and we'd welcome any help / insights into resolving this problem.	
+
+4. Running Shadow Walker
+
+Shadow Walker consists of 2 drivers:
+a. mmhook.sys – memory hook driver
+b. msdirectx.sys – modified FU rootkit
+
+There is no user component so you will need to use some tool like Driver Studio’s Driver Monitor to install the drivers.  First, load msdirectx.sys and then load mmhook.sys.  Obviously, when you unload, you will need to unload the memory hook driver first (mmhook.sys). Once loaded, you can examine the memory where the rootkit driver is loaded using the SoftICE mod command to get its base address.
+
+5. Bug reports, constructive criticisms, and ideas for improvement are always welcome :)
+
+6. The code is reasonably well documented and is available at:
+
+
+7. Thanks and Acknowlegements:
+
+In this field we all build upon the shoulders of others. As such, thanks and aknowlegements go to Joanna Rutkowska for her Chamelon Project  paper as it was one of the inspirations for this project, to the PAX team for showing how to desynchronize the TLB in their software implementation of non executable memory, to Halvar Flake for our inital discussions of the Shadow Walker idea, and to Kayaker for helping beta test and debug some of the code. We would finally like to extend our greetings to all of the contributors on rootkit.com :)  	

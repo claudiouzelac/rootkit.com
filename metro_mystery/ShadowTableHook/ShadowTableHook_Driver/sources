@@ -1,0 +1,23 @@
+TARGETNAME=ShadowTableHook_Driver
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+#
+# setup visualC++ source browsing
+#
+BROWSER_INFO=1
+BROWSERFILE=$(TARGETNAME).bsc -n
+
+#
+# The  WinXP DDK has introduced the DDK_TARGET_OS environemnt variable
+# for conditional compilation.  The test here is designed to make this
+# sources file portable to the standalone Win 2K DDK environment.  Note,
+# however, that the required csq.h and csq.lib are not present in that
+# environment.
+#
+!if "$(DDK_TARGET_OS)"!="WinXP"
+C_DEFINES=$(C_DEFINES) -DW2K=1
+TARGETLIBS=$(DDK_LIB_PATH)\csq.lib
+!endif
+
+SOURCES=ShadowTableHook_Driver.c

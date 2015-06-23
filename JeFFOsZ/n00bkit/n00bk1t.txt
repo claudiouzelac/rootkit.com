@@ -1,0 +1,64 @@
+n00bk1t
+-------
+
+0x01 About
+----------
+
+n00bk1t is a user-mode (ring3) rootkit. It is very similar to hxdef but it's written 
+completely in C (well, 99% of it). It has the ability to hide processes/files/regkeys/
+ports/services/.... It also logs windows login (local,via TS and runas) information and
+ftp/pop3 (plain/ssl) password(s). It's not perfect but it fool's alot of users ;)
+
+0x02. Configuration
+-------------------
+
+n00bk1t uses string resources instead of a configuration file. This leaves us with one file.
+Resources are easily editted with a resource editor like PE Explorer or ResHacker. 
+That's why i advise you to use a packer/crypter on the final exe. ;)
+Multiple configuration items in one string must be delimited by ; (fe. root.exe;shit.exe)
+For ports you can use ranges, fe. 1001-1050;666;10-20.
+Space regkey contains a string value in the form of "DISK"="SPACE_TO_HIDE_IN_BYTES", 
+fe. "C"="100000000". (you can use 64-bit numbers). 
+Regkey must start with: \\Registry fe. \\Registry\\Machine\\Test
+
+String values:
+
+String 01 -> Root process(es)
+String 02 -> Hidden process(es)
+String 03 -> Hidden driver(s)
+String 04 -> Hidden file(s)/directory(-ies)
+String 05 -> Hidden local tcp port(s)
+String 06 -> Hidden remote tcp port(s)
+String 07 -> Hidden udp port(s)
+String 08 -> Hidden regkey(s)
+String 09 -> Hidden regkey value(s)
+String 10 -> Hidden service(s)
+String 11 -> Hidden space regkey
+String 12 -> Login/ftp/smtp/pop3... logfile
+String 13 -> Run as service ? (0=No/1=Yes)
+String 14 -> Service name
+String 15 -> Service display name
+String 16 -> Service description
+String 17 -> Shell name (unused for now)
+
+0x03 Usage:
+-----------
+
+If you set String 13 to 1, n00bk1t wil try to install and start itselfs as a service. If that fails
+or String 13 is set to 0, n00bk1t will run as a normal process.
+
+Parameters:
+-ui: uninstall, unstable (does not delete service)
+-ud: update (you can edit the resources and then perform an update)
+
+0x04. Thanks to:
+----------------
+ 
+ - Holy Father, creator of hxdef. RIP
+ - z0mbie, creator of a lots of things, i'm using his LDE 1.05, thx dude, wherever you are ;)
+ - Greg & Jamie, the guys from rootkit.com, and not to forget the rootkit.com community !
+ - Agner Fog, creator of the random c lib i use
+ - Ratter, also creator of a lots of thing, i thank him for his work on the lsalogonuser hook ;)
+ - Einstein, for his work on the raw registry stuff
+ - PE386, for the blacklight file hiding idea
+

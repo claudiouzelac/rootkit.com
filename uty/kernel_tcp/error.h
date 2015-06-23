@@ -1,0 +1,6 @@
+///
+//	uty@uaty
+///
+#define ERROR_SUCCESS			0x00000000
+#define ERROR_SOCK_INVALID		0x00000001
+#define ERROR_NO_MORE_SOCKET	0x00000002

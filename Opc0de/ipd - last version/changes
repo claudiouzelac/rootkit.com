@@ -1,0 +1,26 @@
+Version 1.4
+-----------
+Removed the hooks to ZwOpenFile and ZwCreateFile which used to protect
+the %SystemRoot%\system32\drivers directory. The driver now locates
+then opens and locks each driver file individually. Driver files are
+located by scanning the Services section of the registry and they are
+subsequently opened with shared read access using ZwOpenFile.
+
+Version 1.3
+-----------
+Added block of ZwCreateSymbolicLinkObject to block the creation of an
+alias name for \Device\PhysicalMemory (see Phrack 59-16,
+http://www.phrack.org/show.php?p=59&a=16 by crazylord
+<crazylord@minithins.net>).
+
+Patched util.c to fix the Time Vulnerability as posted on NTBUGTRAQ by
+Jan K. Rutkowski <jkrutkowski@elka.pw.edu.pl>.
+
+Version 1.2
+-----------
+Added block of ZwSetSystemInformation()'s SystemLoadAndCallImage.
+
+Added the Oracle listener service to the list of images that are
+allowed privileges. The listener is using PROCESS_CREATE_THREAD
+and PROCESS_VM_WRITE when opening another oracle service process.
+

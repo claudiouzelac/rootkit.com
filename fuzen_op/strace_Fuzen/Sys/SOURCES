@@ -1,0 +1,4 @@
+TARGETNAME=strace
+TARGETPATH=.
+TARGETTYPE=DRIVER
+SOURCES= rk_interrupt.c basic.c

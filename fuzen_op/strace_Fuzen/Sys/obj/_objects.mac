@@ -1,0 +1,24 @@
+ALPHA_OBJECTS= \
+    $(_OBJ_DIR)\alpha\rk_interrupt.obj \
+    $(_OBJ_DIR)\alpha\basic.obj
+
+PASS0_ALPHA_OBJECTS=
+
+AXP64_OBJECTS= \
+    $(_OBJ_DIR)\axp64\rk_interrupt.obj \
+    $(_OBJ_DIR)\axp64\basic.obj
+
+PASS0_AXP64_OBJECTS=
+
+386_OBJECTS= \
+    $(_OBJ_DIR)\i386\rk_interrupt.obj \
+    $(_OBJ_DIR)\i386\basic.obj
+
+PASS0_386_OBJECTS=
+
+IA64_OBJECTS= \
+    $(_OBJ_DIR)\ia64\rk_interrupt.obj \
+    $(_OBJ_DIR)\ia64\basic.obj
+
+PASS0_IA64_OBJECTS=
+

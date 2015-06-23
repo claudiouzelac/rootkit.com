@@ -1,0 +1,8 @@
+.autodepend
+
+NAME = phide
+
+IMPORT=import32
+
+$(NAME).obj:
+   tasm32 /m9 /ml /zn $(NAME).inc

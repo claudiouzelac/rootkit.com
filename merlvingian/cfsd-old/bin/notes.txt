@@ -1,0 +1,2 @@
+if a single file in a directory is hiden you cannot delte the directory,you will get a directory not empty error.
+If more entries then what are hidden are present in the directory deletion is possible.

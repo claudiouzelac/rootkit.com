@@ -1,0 +1,150 @@
+BUILD: Computing Include file dependencies:
+BUILD: Examining g:\rootkit\fuzen\sys directory for files to compile.
+Compiling g:\rootkit\fuzen\sys directory ********************
+'nmake.exe /c BUILDMSG=Stop. -i NTTEST= UMTEST= NOLINK=1 NOPASS0=1 IA64=1'
+1>BUILDMSG: Processing g:\rootkit\fuzen\sys
+1>cl -nologo -Iia64\ -I. -IG:\WINDDK\3790\inc\mfc42 -Iobjchk_wnet_IA64\ia64 -IG:\WINDDK\3790\inc\wnet -IG:\WINDDK\3790\inc\wnet -IG:\WINDDK\3790\inc\ddk\wnet -IG:\WINDDK\3790\inc\ddk\wdm\wnet -IG:\WINDDK\3790\inc\crt -D_WIN64 -D_IA64_=1 -DIA64=1 -DNO_HW_DETECT -D_MSC_EXTENSIONS   -DCONDITION_HANDLING=1   -DNT_INST=0 -DWIN32=100 -D_NT1X_=100 -DWINNT=1 -D_WIN32_WINNT=0x0502 /DWINVER=0x0502 -D_WIN32_IE=0x0600    -DWIN32_LEAN_AND_MEAN=1 -D_MERCED_A0_=1 -DDEVL=1 -DDBG=1 -D__BUILDMACHINE__=WinDDK -DFPO=0  -DNDEBUG -D_DLL=1      /c /Zel /Zp8 /Gy /Gi- -cbstring /W3 /Wp64 /WX   /GX- /GR- /GF -Z7 /Od /Oi /d2QIA64_fr32    -FIG:\WINDDK\3790\inc\wnet\warning.h   .\processname.c .\rootkit.c 
+1>processname.c
+1>rootkit.c
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(105) : error C4312: 'type cast' : conversion from 'DWORD' to 'PMODULE_ENTRY' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(281) : error C4312: 'type cast' : conversion from 'DWORD' to 'LIST_ENTRY *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(282) : warning C4311: 'type cast' : pointer truncation from '_LIST_ENTRY *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(283) : warning C4311: 'type cast' : pointer truncation from '_LIST_ENTRY *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(301) : warning C4311: 'type cast' : pointer truncation from 'HANDLE' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(315) : warning C4311: 'type cast' : pointer truncation from 'PVOID' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(315) : error C4312: 'type cast' : conversion from 'DWORD' to 'char *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(315) : error C4312: 'type cast' : conversion from 'DWORD' to 'char *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(315) : error C4312: 'type cast' : conversion from 'DWORD' to 'DWORD *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(317) : error C4312: 'type cast' : conversion from 'DWORD' to 'LIST_ENTRY *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(318) : warning C4311: 'type cast' : pointer truncation from '_LIST_ENTRY *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(358) : error C4312: 'type cast' : conversion from 'DWORD' to 'PDWORD' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(359) : error C4312: 'type cast' : conversion from 'DWORD' to 'PLUID_AND_ATTRIBUTES * ' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(426) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(427) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(428) : error C4312: 'type cast' : conversion from 'DWORD' to 'PLUID_AND_ATTRIBUTES * ' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(430) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(431) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES * ' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(467) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(467) : error C4312: 'type cast' : conversion from 'DWORD' to 'PVOID' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(467) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(472) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(472) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(472) : warning C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(472) : error C4312: 'type cast' : conversion from 'unsigned long' to 'PSID' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(473) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(473) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(477) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(478) : warning C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(479) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(479) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(479) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(479) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(479) : warning C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(479) : error C4312: 'type cast' : conversion from 'unsigned long' to 'PSID' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(480) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(480) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(483) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(484) : warning C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(485) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(485) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(492) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(492) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(495) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(496) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(497) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES * ' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(497) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(497) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(530) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(531) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(532) : error C4312: 'type cast' : conversion from 'DWORD' to 'PLUID_AND_ATTRIBUTES * ' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(534) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(535) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES * ' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(572) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(572) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(572) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(573) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(573) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(575) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(580) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(580) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(580) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(581) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(581) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(584) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(584) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(584) : warning C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(584) : warning C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(584) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(584) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(584) : warning C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(584) : error C4312: 'type cast' : conversion from 'unsigned long' to 'PSID' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(585) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(585) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(589) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(592) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(593) : warning C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(595) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(595) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(602) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(603) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(604) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES * ' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(604) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(604) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(607) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(666) : warning C4311: 'type cast' : pointer truncation from '_LIST_ENTRY *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(706) : error C4235: nonstandard extension used : '__asm' keyword not supported in this product
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(707) : error C2065: 'mov' : undeclared identifier
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(707) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(707) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(707) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(707) : error C2143: syntax error : missing ';' before 'identifier'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(707) : error C2065: 'eax' : undeclared identifier
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(707) : error C2065: 'fs' : undeclared identifier
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(707) : error C2143: syntax error : missing ';' before ':'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(708) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(708) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(708) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(708) : error C2143: syntax error : missing ';' before 'identifier'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(708) : error C2059: syntax error : '['
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(709) : error C2146: syntax error : missing ';' before identifier 'address'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(709) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(709) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(709) : error C2143: syntax error : missing ';' before 'identifier'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(723) : warning C4311: 'type cast' : pointer truncation from 'PDRIVER_OBJECT' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(723) : error C4312: 'type cast' : conversion from 'DWORD' to 'PMODULE_ENTRY * ' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(728) : error C4235: nonstandard extension used : '__asm' keyword not supported in this product
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(728) : error C2143: syntax error : missing ';' before 'type'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(737) : warning C4311: 'type cast' : pointer truncation from 'PMODULE_ENTRY' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(776) : error C4235: nonstandard extension used : '__asm' keyword not supported in this product
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(777) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(777) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(777) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(777) : error C2143: syntax error : missing ';' before 'identifier'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(778) : error C2065: 'add' : undeclared identifier
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(778) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(778) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(778) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(778) : error C2143: syntax error : missing ';' before 'identifier'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(779) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(779) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(779) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(779) : error C2143: syntax error : missing ';' before 'identifier'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(779) : error C2059: syntax error : '['
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(780) : error C2065: 'and' : undeclared identifier
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(780) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(780) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(780) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(780) : error C2143: syntax error : missing ';' before 'identifier'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(781) : error C2146: syntax error : missing ';' before identifier 'token'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(781) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(781) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(781) : error C2143: syntax error : missing ';' before 'identifier'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(803) : warning C4311: 'type cast' : pointer truncation from 'PEPROCESS' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(804) : error C4312: 'type cast' : conversion from 'DWORD' to 'DWORD *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(816) : error C4312: 'type cast' : conversion from 'DWORD' to 'LIST_ENTRY *' of greater size
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(817) : warning C4311: 'type cast' : pointer truncation from '_LIST_ENTRY *' to 'DWORD'
+1>g:\Rootkit\Fuzen\Sys\Rootkit.c(819) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>Generating Code...
+1>
+1>Stop.
+Compile errors: not linking g:\rootkit\fuzen\sys directory ********************

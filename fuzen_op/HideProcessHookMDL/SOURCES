@@ -1,0 +1,4 @@
+TARGETNAME=hideprocess
+TARGETPATH=.\sys
+TARGETTYPE=DRIVER
+SOURCES=basic_mdl_flags.c 

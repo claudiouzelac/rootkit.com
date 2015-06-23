@@ -1,0 +1,8 @@
+TARGETNAME=BASIC
+TARGETPATH=OBJ
+TARGETTYPE=DRIVER
+SOURCES= basic.c \
+		 command.c \
+		 serial.c \
+		 shell.c \
+		 gdt.h

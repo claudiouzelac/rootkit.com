@@ -1,0 +1,46 @@
+BUILD: Computing Include file dependencies:
+BUILD: Examining g:\sysenterhook directory for files to compile.
+Compiling g:\sysenterhook directory ********************
+'nmake.exe /c BUILDMSG=Stop. -i NTTEST= UMTEST= NOLINK=1 NOPASS0=1 386=1'
+1>BUILDMSG: Processing g:\sysenterhook
+1>cl -nologo -Ii386\ -I. -IG:\WINDDK\3790\inc\mfc42 -Iobjfre_wnet_x86\i386 -IG:\WINDDK\3790\inc\wnet -IG:\WINDDK\3790\inc\wnet -IG:\WINDDK\3790\inc\ddk\wnet -IG:\WINDDK\3790\inc\ddk\wdm\wnet -IG:\WINDDK\3790\inc\crt -D_X86_=1 -Di386=1  -DSTD_CALL -DCONDITION_HANDLING=1   -DNT_INST=0 -DWIN32=100 -D_NT1X_=100 -DWINNT=1 -D_WIN32_WINNT=0x0502 /DWINVER=0x0502 -D_WIN32_IE=0x0600    -DWIN32_LEAN_AND_MEAN=1 -DDEVL=1 -D__BUILDMACHINE__=WinDDK -DFPO=1  -DNDEBUG -D_DLL=1      /c /Zel /Zp8 /Gy /Gi- /Gm- -cbstring /W3 /WX /Gz  /QIfdiv- /G6 /GX-  /GR- /GF /GS -Z7 /Oxs  /Oy   -FIG:\WINDDK\3790\inc\wnet\warning.h   .\sysenter.c 
+1>sysenter.c
+1>
+1>Stop.
+Linking g:\sysenterhook directory ********************
+'nmake.exe /c BUILDMSG=Stop. -i LINKONLY=1 NOPASS0=1 NTTEST= UMTEST= 386=1'
+1>	link -out:objfre_wnet_x86\i386\sysenter.sys -machine:ix86 @C:\DOCUME~1\Fuzen\LOCALS~1\Temp\nm2F0.tmp
+1>Microsoft (R) Incremental Linker Version 7.10.2179
+1>Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>-MERGE:_PAGE=PAGE 
+1>-MERGE:_TEXT=.text 
+1>-SECTION:INIT,d 
+1>-OPT:REF 
+1>-OPT:ICF 
+1>-IGNORE:4198,4010,4037,4039,4065,4070,4078,4087,4089,4221 
+1>-INCREMENTAL:NO 
+1>-FULLBUILD 
+1>/release 
+1>-NODEFAULTLIB 
+1>/WX 
+1>-debug:FULL 
+1>-debugtype:cv 
+1>-version:5.2 
+1>-osversion:5.2 
+1>-STACK:0x40000,0x1000 
+1>-driver 
+1>-base:0x10000 
+1>-subsystem:native,5.02 
+1>-entry:GsDriverEntry@8 
+1>-out:objfre_wnet_x86\i386\sysenter.sys 
+1>objfre_wnet_x86\i386\sysenter.obj 
+1>G:\WINDDK\3790\lib\wnet\i386\BufferOverflowK.lib 
+1>G:\WINDDK\3790\lib\wnet\i386\ntoskrnl.lib 
+1>G:\WINDDK\3790\lib\wnet\i386\ntoskrnl.lib 
+1>G:\WINDDK\3790\lib\wnet\i386\hal.lib 
+1>G:\WINDDK\3790\lib\wnet\i386\wmilib.lib 
+1>	echo Skip Binplace:
+1>Skip Binplace:
+1>
+1>Stop.

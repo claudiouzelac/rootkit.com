@@ -1,0 +1,151 @@
+
+                         Process Hide v1.0
+
+                         by 90210//HI-TECH
+
+0. Abstract
+-----------
+
+"Phide"  (process  hide)  is  the  engine  for  the  low level process
+manipulating  on  kernel  level,  designed  to  be  used by a userland
+process. It supports only nt-based systems (NT4, 2k, XP, 2k3). Process
+management  is  done  through  the  playing  with EPROCESS structures.
+Thread   that   calls   engine   MUST   have   read/write   access  to
+\Device\PhysicalMemory, otherwise engine will fail.
+
+1. Features
+-----------
+
+The engine main features are:
+- get EPROCESS offset for a given pid.
+- hide  the  selected  process by excluding its EPROCESS from the most
+low-level  kernel  process list, which starts from PsActiveProcessHead
+symbol.
+- change selected process image name in run-time.
+- patch  UniqueProcess  field  in  all  ETHREADs  that  belong  to the
+selected  process  to  hide  it  from  klister-like  tools.
+- process  can  be  selected  by  pid  or  directly  by  its  EPROCESS
+structure.  This is useful when process is already hidden and you have
+to  hide  new thread from klister, because even one thread with a real
+pid of its process-creator will compromise the whole process.
+
+Process  hiding  technique is the same, as in the 'fu' rootkit, but my
+goal  was  to  make  a small engine callable from r3. For now it's the
+only  tool,  which hides processes from klister (i have version 0.3 of
+this brilliant software).
+
+Engine  code  doesn't rely on the hardcoded ntoskrnl offsets, that may
+vary from one servicepack to another. It only relays on the offsets of
+the  needed  EPROCESS  and  EHTREADS fields, because these structs are
+different in 4 types of nt-based oses.
+
+2. Usage
+--------
+
+ProcessHide proc dwProcess2Hide:DWORD,\
+                 dwFlags:DWORD,\
+                 pNewImgName:DWORD,\
+                 ppEPROCESS:DWORD
+
+Function format is STDCALL.
+
+Parameters:
+
+dwProcess2Hide
+  Specifies  the process. May be PID or pointer to EPROCESS structure.
+  When  setting dwProcess2Hide to pid, the PH_PROCESS_BY_PID flag must
+  be set. Otherwise, set PH_PROCESS_BY_EPROCESS flag.
+
+dwFlags
+  Specifies  what  engine  should  do with selected process and how it
+  should  interpret  dwProcess2Hide  parameter.  dwFlags  may  be    a
+  combination of following flags:
+  
+  PH_PROCESS_BY_PID
+    dwProcess2Hide is a PID.
+    
+  PH_PROCESS_BY_EPROCESS
+    dwProcess2Hide points to a EPROCESS structure.
+    
+  PH_EXCLUDE_EPROCESS
+    Hide specified process by excluding its EPROCESS from the EPROCESS
+    linked list, which start from PsActiveProcessHead.
+  
+  PH_CHANGE_THREADS_PID
+    Enumerate  all  threads  that  belong to specified process, change
+    their  creator's  pid to 8 (System process) and set process' image
+    file  name  to  'System'.  This  is done to avoid detecting hidden
+    process by klister tool.
+
+  PH_CHANGE_IMGNAME
+    Changes  image  file name of the specified process. Name is set to
+    pNewImgName. Note that on XP and above process image name will not
+    increase its length - if user supplied name is longer than current
+    image name, it will be truncated.
+    
+pNewImgName
+  Points  to  a  null-terminated  ANSI  string  that  will be set as a
+  process  image  filename  if  PH_CHANGE_IMGNAME flag is set. Ignored
+  otherwise.
+  
+ppEPROCESS
+  Points  to DWORD that the engine sets to the found process' EPROCESS
+  pointer. May be NULL if EPROCESS offset is not needed.
+
+
+
+Return valules
+  If  the  engine  succeeds,  the  return value is zero. If the engine
+  fails for some reason, return value will be one of the following:
+
+  PH_ERR_GENERAL
+    An exception occured somewhere in the engine while working.
+  
+  PH_ERR_PROCESS_NOT_FOUND
+    Engine  couldn't  find  process  with  specified  PID or specified
+    EPROCESS seems to be invalid.
+  
+  PH_ERR_MUST_SPECIFY_NAME
+    Flag PH_CHANGE_IMGNAME is set but pNewImgName is NULL.
+  
+  PH_ERR_NOT_ENOUGH_MEMORY
+    One of the VirtualAlloc engine calls has failed.
+  
+  PH_ERR_CANT_FIND_NTOSKRNL
+    Engine couldn't find ntoskrnl imagebase. Strange.
+  
+  PH_ERR_CANT_OPEN_SECTION
+    \Device\PhysicalMemory  is  protected  by some security program or
+    you  haven't enough privileges to open it. By default, only admins
+    can do that.
+  
+  PH_ERR_CANT_LOAD_NTOSKRNL
+    Internal engine error: it couldn't load ntoskrnl image for further
+    analysis. Strange.
+  
+  PH_ERR_CANT_FIND_PAPH
+    Engine failed to find PsActiveProcessHead offset in ntoskrnl.
+    
+  PH_ERR_CANT_MAP_SECTION
+    Engine  couldn't  map a region of physical memory to some userland
+    region. Usually happens in VMWare systems.
+  
+  PH_ERR_CANT_LOCK_PAGES
+    R0 code and data pages couldn't be locked for some reason.
+
+  PH_ERR_CANT_FIND_FREE_DESCRIPTOR
+    All GDT entries are present (bit P set). Strange.
+  
+  PH_ERR_OS_NOT_SUPPORTED
+    Only NT4, 2k, XP and 2k3 server are supported.
+  
+
+Remarks
+
+  Use  PH_CHANGE_THREADS_PID  very  carefully.  After  this  operation
+  threads  will  "disconnect"  from  csrss  -  console  output will be
+  trashed. GUI processes may cause bsod on their ExitProcess.
+  Note  that  XP  and 2k3 don't set EPROCESS SE AUDIT PROCESS CREATION
+  INFO ImageFileName field before first thread start - they do that "a
+  bit  later",  so  don't  expect  that  PH_CHANGE_IMGNAME  call  will
+  succesfully change the name of the newly created process.

@@ -1,0 +1,17 @@
+00000000	0.00000000	HookIAT: DriverEntry start	
+00000001	0.00000635	HookIAT: Driver Image a63aa000 - a63ab080	
+00000002	0.00001216	HookIAT: IAT Address of: IoCreateDevice@ntoskrnl.exe: a63aaba4 [->8059f6e4]	
+00000003	0.00001699	HookIAT: IAT Address of: IoDeleteDevice@ntoskrnl.exe: a63aab90 [->8050bfe0]	
+00000004	0.00002188	HookIAT: IAT Address of: IoCreateSymbolicLink@ntoskrnl.exe: a63aaba0 [->805cf2f0]	
+00000005	0.00002675	HookIAT: IAT Address of: IoDeleteSymbolicLink@ntoskrnl.exe: a63aab94 [->805d42fc]	
+00000006	0.00005264	HookIAT: *** IoCreateDeviceHook: \Device\HookIAT	
+00000007	0.00007544	HookIAT: *** IoCreateSymbolicLinkHook: \DosDevices\HookIAT -> \Device\HookIAT	
+00000008	0.00007870	HookIAT: DriverEntry exit status: 00000000	
+00000009	0.00030296	HookIAT: DriverDispatch control code: 00000080	
+00000010	0.00030645	HookIAT: DriverDispatch exit status: 00000000	
+00000011	0.00041846	HookIAT: DriverDispatch control code: 00000000	
+00000012	0.00042180	HookIAT: DriverDispatch exit status: 00000000	
+00000013	0.00174880	HookIAT: DriverUnload start	
+00000014	0.00175503	HookIAT: *** IoDeleteSymbolicLinkHook: \DosDevices\HookIAT	
+00000015	0.00177356	HookIAT: *** IoDeleteDeviceHook	
+00000016	0.00177702	HookIAT: DriverUnload end	

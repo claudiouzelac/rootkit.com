@@ -1,0 +1,14 @@
+# Microsoft Developer Studio erstellte Abhängigkeitsdatei, einbezogen von defragger.mak
+
+.\main.rc : \
+	".\comp.ico"\
+	".\dir.ico"\
+	".\file.ico"\
+	".\frag.ico"\
+	".\free.ico"\
+	".\main.ico"\
+	".\mft.ico"\
+	".\resource.h"\
+	".\small.ico"\
+	".\system.ico"\
+	

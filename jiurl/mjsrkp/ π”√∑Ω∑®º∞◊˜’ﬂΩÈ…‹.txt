@@ -1,0 +1,160 @@
+/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+
+        Copyright (c) JIURL, All Rights Reserved
+
+/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+
+[ 声明 ]
+如果不同意本声明中的内容，请不要使用本软件。
+使用本软件的一切后果自负，与作者无关。
+
+[ 关于 ]
+
+    作者： jiurl
+HomePage： http://jiurl.yeah.net
+   Email： jiurl@mail.china.com
+    论坛： 曾经有个，现在完蛋了。谁给来点空间，让我再弄一个。
+
+[ 简介 ]
+
+本版本删减掉了很多功能，详见后。
+
+mjsrk Microjiurlsoft rootkit
+适用： Windows NT 系列
+
+服务端口：32768
+登录口令：jiurl
+同时最大客户端数：5
+上线IRC通知服务器：     irc.263.net
+上线IRC通知服务器端口： 6667
+上线IRC通知频道：       #ring0
+
+
+主要功能：
+1. 得到一个 cmd shell
+2. 上传下载文件
+3. 上线 IRC 通知
+4. 服务器端多线程
+6. 口令登录
+7. 获得进程列表
+8. 杀死指定进程
+9. 服务端的状态和信息
+
+删减掉的功能：
+1. 进程隐藏
+2. 开机自启动
+3. 端口隐藏
+4. 注册表隐藏
+5. 文件隐藏
+6. 对登录密码，上线irc通知服务器，端口，频道，等的配置功能
+7. 其他
+
+以后还考虑加入：
+1. 反向连接
+2. 通信加密
+
+cmd shell 默认是 cmd.exe，也可以自己指定。
+上传下载文件的过程中，将显示进度。
+服务器上线IRC通知，使用的是 irc.263.net #ring0。每次上线，比如上线之后，又下线，再次上线，都将进行通知。
+服务端使用了多线程，可以同时最多处理5个连接，对因为客户端断电，reset之类的异常导致的情况也进行了处理。
+登录口令为jiurl。
+服务端的信息，比如操作系统的版本号，cpu信息，内存信息，开机到现在的运行时间等等。
+
+[ 作者介绍 ]
+
+jiurl，又 microjiurl， 唉。
+
+[ 注意 ]
+如果发现什么bug，尤其是服务端的bug，欢迎来这个irc，服务器 irc.263.net，频道#ring0，来给我提出。
+或者写信给我提出。
+
+[ 命令介绍 ]
+
+mjsrk> help
+For more information on a specific command, type HELP command-name.
+
+about  ??????
+cmd   Get a cmd shell.
+get   Copy a file from the server.
+put   Copy a file to the server.
+stat  Server state and information.
+list  List running processes on server.
+kill  Kill a running process on server.
+quit  Quit this program.
+help  Help information for commands.
+cls   Clears the screen.
+
+cmd [FullPathNameFile]
+作用：获得一个 Shell。
+
+参数：
+有一个可选参数。
+不加参数的话，将运行 cmd.exe 作为 Shell。
+加一个参数的话，该参数将用来指明作为 Shell 的文件的完全路径名称（还要包括后缀）。
+
+get RemoteFile NewLocalFile
+作用：从远程主机上下载一个文件。
+
+put LocalFile NewRemoteFile
+作用：向远程主机上传一个文件。
+
+stat
+作用：获得远程主机的当前状态和信息。
+参数：无参数。
+
+list
+作用：获得远程主机的当前进程列表。
+参数：无参数。
+
+kill PidInDecimal
+作用：杀死指定进程。
+参数：只有一个参数。要杀死进程的进程ID。
+
+quit
+作用：退出当前会话。
+参数：无参数。
+
+help [CommandName]
+作用：帮助。
+参数：一个可选参数。
+无参数的话，将列出所有命令，和对命令的介绍。
+一个参数的话，这个参数是命令名，将给出该命令的用法。
+
+cls
+作用： 客户端清屏。
+参数： 无参数。
+
+[ 操作例子 ]
+
+使用客户端连接：
+Microjiurlsoft Rootkit 2004 [Home http://jiurl.nease.net]
+(C) Copyright eternalness Microjiurl Prole.
+
+Server IP> 127.0.0.1
+Server Password> jiurl
+
+使用cmd命令：
+mjsrk> cmd
+Microsoft Windows 2000 [Version 5.00.2195]
+(C) 版权所有 1985-2000 Microsoft Corp.
+
+C:\>exit
+exit
+200 CMD Command Success.
+
+mjsrk>
+
+[ 其他 ]
+
+也可使用 telnet 进行连接，注意命令必须大写。
+
+CMD
+RETR
+STOR
+STAT
+LIST
+KILL
+QUIT
+
+
+

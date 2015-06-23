@@ -1,0 +1,43 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: kbd - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x412 /fo"Debug/kbd.res" /d "_DEBUG" "C:\Documents and Settings\chpie\πŸ≈¡ »≠∏È\gui\kbd.rc"" 
+Creating temporary file "C:\DOCUME~1\chpie\LOCALS~1\Temp\RSP15.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"Debug/kbd.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Documents and Settings\chpie\πŸ≈¡ »≠∏È\gui\driver.c"
+"C:\Documents and Settings\chpie\πŸ≈¡ »≠∏È\gui\kbd.c"
+"C:\Documents and Settings\chpie\πŸ≈¡ »≠∏È\gui\keyboard.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\chpie\LOCALS~1\Temp\RSP15.tmp" 
+Creating temporary file "C:\DOCUME~1\chpie\LOCALS~1\Temp\RSP16.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/kbd.pdb" /debug /machine:I386 /out:"Debug/kbd.exe" /pdbtype:sept 
+".\Debug\driver.obj"
+".\Debug\kbd.obj"
+".\Debug\keyboard.obj"
+".\Debug\kbd.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\chpie\LOCALS~1\Temp\RSP16.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+driver.c
+c:\documents and settings\chpie\πŸ≈¡ »≠∏È\gui\driver.c(97) : warning C4047: 'function' : 'unsigned long ' differs in levels of indirection from 'void *'
+c:\documents and settings\chpie\πŸ≈¡ »≠∏È\gui\driver.c(97) : warning C4024: 'StartServiceA' : different types for formal and actual parameter 2
+kbd.c
+keyboard.c
+Linking...
+
+
+
+<h3>Results</h3>
+kbd.exe - 0 error(s), 2 warning(s)
+</pre>
+</body>
+</html>

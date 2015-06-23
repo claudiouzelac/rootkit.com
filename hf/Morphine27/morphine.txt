@@ -1,0 +1,187 @@
+Morphine v2.7
+=============
+
+Morphine as a part of Hacker Defender rootkit (http://rootkit.host.sk) 
+by Holy_Father <holy_father@phreaker.net> && Ratter/29A 
+Copyright (c) 2000,forever ExEwORx
+betatested by ch0pper <THEMASKDEMON@flashmail.com>
+birthday: 03.10.2004
+home: http://www.hxdef.org, http://hxdef.net.ru, http://hxdef.czweb.org, 
+      http://rootkit.host.sk
+mirror: http://hxdef.xtremescripter.de
+licence: this program is open source under GNU GPL
+update: 22.07.2005: translate into C++ by ashkBiz <ashkbiz@yahoo.com>
+        whole CPP project is in CPP directory
+
+        Morphine is very unique application for PE files encryption. Unlike 
+other PE encryptors and compressors Morphine includes own PE loader which 
+enables it to put whole source image to the .text section of new PE file. This 
+one is very powerful because you can compress source file with your favourite
+compressor like UPX and then encrypt its output with Morphine. Another powerful
+thing here is polymorphic engine which always creates absolutely different 
+decryptor for the new PE file. This mean if your favourite trojan horse is 
+detected by an antivirus you can encrypt it with Morphine. You will not get 
+the virus alert again. 
+        What's more, Morphine allows you to encrypt one file several times!
+But be sure you're using -b option (see usage) when doing this. Unlike others 
+Morphine enlarges your executable by not more than 5kb (this is not true for 
+morphined DLLs without using -d option, see below)! Morphine supports most 
+of PE files and many of other PE encryptor/packers. Also one of the greatest 
+things here is that it is an open source project. In these days antivirus 
+companies sniff around our site waiting for new version of morphine to add 
+new decoder into their databases. But you can simply make your own undetectable 
+version. Because new PE file has random loader it is possible the loading will 
+take more time than you want to (especially when encrypting bigger files). 
+If this occurs simply delete the long time loading PE file and try to build it 
+again. And be careful with morphined DLLs. This can really slow down final 
+execution.
+        Whole Morphine code is compatible with Delphi 6 and 7 compiler. 
+Morphined files can be executed on Windows with NT kernel only.
+
+
+
+Usage
+-----
+
+Usage: morphine.exe [-q] [-d] [-b:ImageBase] [-o:OutputFile] InputFile
+  -q             be quiet (no console output)
+  -d             for dynamic DLLs only
+  -i             save resource icon and XP manifest
+  -a             save overlay data from the end of original file
+  -b:ImageBase   specify image base in hexadecimal string
+                 (it is rounded up to next 00010000 multiple)
+  -o:OutputFile  specify file for output
+                 (InputFile will be rewritten if no OutputFile given)
+
+Examples:
+1) morphine.exe -q c:\winnt\system32\cmd.exe
+ rewrite cmd.exe in system directory and write no info
+
+2) morphine.exe -b:1F000000 -o:newcmd.exe c:\winnt\system32\cmd.exe
+ create new file called newcmd.exe based on cmd.exe in system dir
+ set its image base to 0x1F000000 and display info about processing
+
+3) morphine.exe -d static.dll
+ rewrite static.dll which is loaded only dynamically
+
+4) morphine.exe -i -o:cmdico.exe c:\winnt\system32\cmd.exe
+ create new file called cmdico.exe based on cmd.exe in system dir
+ save its icon and or XP manifest in resource section
+
+5) morphine.exe -i -a srv.exe
+ rewrite srv.exe, save its icon, XP manifest and overlay data
+
+
+
+Versions
+--------
+
+Better DLL support in Morphine 2.7 should make morphined DLL work also 
+on NT4.
+
+
+TLS bugfix number 2 is Morphine 2.6.
+
+
+Version 2.5 fixes the bug in TLS support.
+
+
+Better support for VB programs together with end of file overlay support 
+was added to Morphine 2.4.
+
+
+There were two serious bugz in previous releases. Morphine 2.3 fixs both
+of them.
+
+
+Version 2.2 supports Mew 11 SE 1.2 exe packer.
+
+
+Version 2.1 supports FSG 2.0 exe packer.
+
+
+Version 2.0 implements random secondary encryption routine and adds enables 
+saving resource for DLLs. Last improvement in this version is a fake loop 
+in DynLoader which protects morphine files against Norton AntiVirus.
+
+
+Since 1.9 you can save first icon directory and XP manifest in resource 
+section using -i switch. 
+
+
+Polycode is now smaller then ever - only 16 instructions - in version 1.8. 
+Smaller polycode makes possible smaller final executable.
+
+
+Version 1.7 implements variable key length for second encryption routine.
+
+
+Version 1.6 is about fucking KAV :). Well, not only fucking KAV, also 
+second decrypting unit is before loader.
+
+Version 1.5 is about improved polymorphic code. It's much more easier to 
+write own polycode now. Also it's hard to detect for AV.
+
+
+Since 1.4 you can morphine DLL. There is a new option -d which isn't used by 
+default. There are two ways how to import functions from DLL. For static import
+PE loader use import section in PE file. For dynamic import coder have to use 
+functions like LoadLibrary and GetProcAddress. Many of DLLs are loaded only
+dynamically. But this can change in future because any program can load DLL 
+statically. If you know your morphined DLL will never be loaded statically 
+you can use (and it's better to use) -d option (morphined DLLs without -d 
+can be much bigger than original).
+
+
+Since 1.3 we use smaller polymorphic loader. This is good for final executable
+which is less than 5kb bigger than original file. Also source code is more 
+transparent.
+
+
+Since 1.2b morphined file has no .data section and the whole PE file is 
+somewhere in .text section. Reason for this is that you could easily find 
+old PE signatures and then find a key for decoding.
+
+
+Modifications by Jan Klaassen for 1.2a (cut&paste from mail):
+
+Somewhere on a forum I read your solutions for getting around a pattern
+recognition of AntiVirus in "Morphined" executables. The pattern "FF2534" was
+mentioned, but I think the AV also used the ..0000 bytes in front of it, or
+the code after it, since the AV was not triggered if the pattern mentioned was
+somewhere else in the code.
+
+I have made a small modification to the Morphine source code. I thought that
+maybe you or someone you know might be interested in these changes to get
+around AV recognition. I moved the jumps to the import section into the
+initcode (at the end) and implemented several (random) variants for the jumps.
+The jumps are coded seperately and are placed inside your rubbish. :)
+
+The initcode changed in the following way:
+- The addresses of the imported function in @DynLoaderCaller now get fixed-up
+with the location of the import jmps at the end of the initcode
+- The addresses of the import jmps get fixed-up with the location of the
+thunks (hint and name) of the imported function in the import section.
+
+The modified morphine and morphined exes seem to run fine on either Windows XP
+SP1 and Windows 2000 Adv.Server. (All morphined exes crash on Windows 98
+Second Edition.)
+
+
+
+Files
+-----
+
+        original archive contains these files:
+
+morphine.exe     23 360         compiled and MEWed Morphine
+morphine.dpr    172 870         source code of Morphine
+morphine.txt      7 666         this readme
+
+CPP\
+Morphine.exe     34 397         compiled and MEWed c++ Morphine 
+morphine.cpp    298 692         source code of c++ Morphine
+Morphine.dsp      4 428         MSVS file
+Morphine.dsw        539         MSVS file
+morphine.sln        905         MSVS file 
+morphine.vcproj   3 163         MSVS file

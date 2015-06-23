@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.00"
+	Name="ShadowTableHook_Driver"
+	ProjectGUID="{7C42CA2F-674A-4E09-BC88-5E5AB8B7B960}"
+	Keyword="MakeFileProj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="Debug"
+			IntermediateDirectory="Debug"
+			ConfigurationType="0">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="c:\ddkbuild -WXP chk . /cZ"
+				ReBuildCommandLine="c:\ddkbuild -WXP chk . /cZ"
+				CleanCommandLine="c:\ddkbuild -WXP chk . /a"
+				Output="ShadowTableHook_Driver.sys"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="Release"
+			IntermediateDirectory="Release"
+			ConfigurationType="0">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="c:\ddkbuild -WXP chk . /cZ"
+				ReBuildCommandLine="c:\ddkbuild -WXP chk . /cZ"
+				CleanCommandLine="c:\ddkbuild -WXP chk . /a"
+				Output="ShadowTableHook_Driver.sys"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
+			<File
+				RelativePath="ShadowTableHook_Driver.c">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc">
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+		</Filter>
+		<Filter
+			Name="Build Files"
+			Filter="">
+			<File
+				RelativePath="MAKEFILE">
+			</File>
+			<File
+				RelativePath="sources">
+			</File>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

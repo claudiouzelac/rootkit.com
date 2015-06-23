@@ -1,0 +1,22 @@
+
+TARGETNAME=cfsd
+TARGETPATH=obj
+TARGETTYPE=PROGRAM
+UMTYPE=console
+USE_CRTDLL=1
+
+
+C_DEFINES=$(C_DEFINES) -DUNICODE -D_UNICODE
+
+LINKLIBS=$(SDK_LIB_PATH)\shell32.lib
+
+INCLUDES=$(INCLUDES);         \
+         $(IFSKIT_INC_PATH);  \
+         $(DDK_INC_PATH);     \
+         ..\inc
+
+TARGETLIBS=$(TARGETLIBS) \
+           $(IFSKIT_LIB_PATH)\fltLib.lib
+
+SOURCES = cfsd.c cfsd.rc
+

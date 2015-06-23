@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.10"
+	Name="MyNetwork"
+	ProjectGUID="{101D7262-65D6-4009-987B-71504882CC1E}"
+	Keyword="Win32Proj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="Debug"
+			IntermediateDirectory="Debug"
+			ConfigurationType="1"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="../../PCAP/Include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				MinimalRebuild="TRUE"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="3"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="4"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib comctl32.lib wpcap.lib packet.lib"
+				OutputFile="$(OutDir)/MyNetwork.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="../../PCAP/Lib"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/Alpha1.pdb"
+				SubSystem="2"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="Release"
+			IntermediateDirectory="Release"
+			ConfigurationType="1"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				RuntimeLibrary="4"
+				UsePrecompiledHeader="3"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="3"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)/Alpha1.exe"
+				LinkIncremental="1"
+				GenerateDebugInformation="TRUE"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath=".\Alpha1.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\ClientConnector.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\EngineThread.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\LocalNetwork.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\Network.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\NetworkDatabase.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\NetworkDevice.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\PacketEngine.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\RemoteNetwork.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\SendPacketThread.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\ServerEngine.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\SniffPacketThread.cpp">
+			</File>
+			<File
+				RelativePath=".\stdafx.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\Data Model\ThreadsafeObject.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\TunnelEngine.cpp">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\UserConsole.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath=".\Alpha1.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\ClientConnector.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\EngineThread.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\LocalNetwork.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\Network.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\NetworkDatabase.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\NetworkDevice.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\PacketEngine.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\RemoteNetwork.h">
+			</File>
+			<File
+				RelativePath=".\Resource.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\RoutedPacket.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\SendPacketThread.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\ServerEngine.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\SniffPacketThread.h">
+			</File>
+			<File
+				RelativePath=".\stdafx.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\ThreadsafeObject.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\TunnelEngine.h">
+			</File>
+			<File
+				RelativePath="..\..\Data Model\UserConsole.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+			<File
+				RelativePath=".\Alpha1.ico">
+			</File>
+			<File
+				RelativePath=".\Alpha1.rc">
+			</File>
+			<File
+				RelativePath=".\small.ico">
+			</File>
+		</Filter>
+		<File
+			RelativePath=".\ReadMe.txt">
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

@@ -1,0 +1,83 @@
+;
+; NASTY HACK of an example inf just to get this thing working for the moment
+;
+
+[Version]
+Signature   = "$Windows NT$"
+Class       = ""Security Enhancer"
+;ClassGUID  = {d02bc3da-0c8e-4945-9bd5-f1883c226c8c}
+DriverVer   = 10/22/2005,0.0.0.1
+
+[DefaultInstall]
+CopyFiles  = @cfsd.sys
+
+[DefaultInstall.Services]
+AddService  = cfsd,,cfsd.Service
+
+
+
+
+[DefaultUninstall]
+DelFiles   = CFSD.DriverFiles
+DelReg     = CFSD.DelRegistry
+
+[DefaultUninstall.Services]
+DelService = cfsd,0x200
+
+
+
+[DestinationDirs]
+DefaultDestDir   = 12
+CFSD.DriverFiles = 12
+
+
+
+[cfsd.Service]
+DisplayName      = "cfsd"
+Description      = "cfsd"
+ServiceBinary    = %12%\cfsd.sys
+Dependencies     = "FltMgr"
+ServiceType      = 2                            ;SERVICE_FILE_SYSTEM_DRIVER
+StartType        = 3                            ;SERVICE_DEMAND_START
+ErrorControl     = 1                            ;SERVICE_ERROR_NORMAL
+LoadOrderGroup   = "FSFilter Security Enhancer"
+AddReg           = cfsd.AddRegistry
+
+
+
+[cfsd.AddRegistry]
+HKR,%RegInstancesSubkeyName%,%RegDefaultInstanceValueName%,0x00000000,%DefaultInstance%
+HKR,%RegInstancesSubkeyName%"\"%Instance1.Name%,%RegAltitudeValueName%,0x00000000,%Instance1.Altitude%
+HKR,%RegInstancesSubkeyName%"\"%Instance1.Name%,%RegFlagsValueName%,0x00010001,%Instance1.Flags%
+
+HKR,,AttachMethods,0x00010001,%AttachMethods%
+HKR,,VolumeDeviceTypes,0x00010001,%VolumeDeviceTypes%
+HKR,,FileSystems,0x00010001,%FileSystems%
+HKR,,Debug,0x00010001,%Debug%
+
+[cfsd.DelRegistry]
+
+
+
+
+[Strings]
+CFSDRegistry                 = "system\currentcontrolset\services\cfsd"
+
+RegInstancesSubkeyName       = "Instances"
+RegDefaultInstanceValueName  = "DefaultInstance"
+RegAltitudeValueName         = "Altitude"
+RegFlagsValueName            = "Flags"
+
+
+AttachMethods                = 0x00000005
+VolumeDeviceTypes            = 0x00000018
+FileSystems                  = 0x000000cc
+Debug                        = 0x00000000
+
+
+;Instances specific information.
+DefaultInstance      = "cfsd Instance"
+Instance1.Name       = "cfsd Instance"
+Instance1.Altitude   = "80000"
+Instance1.Flags      = 0x0              ; Allow all attachments - most likely will not allow later
+

@@ -1,0 +1,31 @@
+Open Handle v1.0
+================
+
+Main
+----
+
+Open Handle as a part of Hacker Defender rootkit (http://rootkit.host.sk) by
+Holy_Father <holy_father@phreaker.net> && Ratter/29A <ratter@atlas.cz>
+Copyright (c) 2000,forever ExEwORx
+birthday: 10.02.2003
+home: http://rootkit.host.sk
+licence: this program is open source with GPL licence
+
+	Open Handle does almost the same as Handle by Mark Russinovich but 
+contains no code from that program. The main difference is that our Open Handle 
+is open source. This program writes names and values of all open handles of all 
+running processes in the system. Main program is written in Delphi 6 + asm. 
+Driver is written in C.
+
+
+Files
+-----
+
+	original archive contains these files:
+
+OpHandle.dpr	21 827 b	- delphi source for main program
+handle.c	 7 460 b	- c source for driver
+handle.h	   732 b	- c header for driver 
+OpHandle.exe	26 624 b	- main program executable
+OpHandle.res	 3 088 b	- binary resource with .sys driver
+OpHandle.txt	 1 030 b	- this readme

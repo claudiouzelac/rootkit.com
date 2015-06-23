@@ -1,0 +1,138 @@
+1>rootkit.c(105) : error C4312: 'type cast' : conversion from 'DWORD' to 'PMODULE_ENTRY' of greater size
+1>rootkit.c(281) : error C4312: 'type cast' : conversion from 'DWORD' to 'LIST_ENTRY *' of greater size
+1>rootkit.c(282) : error C4311: 'type cast' : pointer truncation from '_LIST_ENTRY *' to 'DWORD'
+1>rootkit.c(283) : error C4311: 'type cast' : pointer truncation from '_LIST_ENTRY *' to 'DWORD'
+1>rootkit.c(301) : error C4311: 'type cast' : pointer truncation from 'HANDLE' to 'DWORD'
+1>rootkit.c(315) : error C4311: 'type cast' : pointer truncation from 'PVOID' to 'DWORD'
+1>rootkit.c(315) : error C4312: 'type cast' : conversion from 'DWORD' to 'char *' of greater size
+1>rootkit.c(315) : error C4312: 'type cast' : conversion from 'DWORD' to 'char *' of greater size
+1>rootkit.c(315) : error C4312: 'type cast' : conversion from 'DWORD' to 'DWORD *' of greater size
+1>rootkit.c(317) : error C4312: 'type cast' : conversion from 'DWORD' to 'LIST_ENTRY *' of greater size
+1>rootkit.c(318) : error C4311: 'type cast' : pointer truncation from '_LIST_ENTRY *' to 'DWORD'
+1>rootkit.c(358) : error C4312: 'type cast' : conversion from 'DWORD' to 'PDWORD' of greater size
+1>rootkit.c(359) : error C4312: 'type cast' : conversion from 'DWORD' to 'PLUID_AND_ATTRIBUTES * ' of greater size
+1>rootkit.c(426) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>rootkit.c(427) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>rootkit.c(428) : error C4312: 'type cast' : conversion from 'DWORD' to 'PLUID_AND_ATTRIBUTES * ' of greater size
+1>rootkit.c(430) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>rootkit.c(431) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES * ' of greater size
+1>rootkit.c(467) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(467) : error C4312: 'type cast' : conversion from 'DWORD' to 'PVOID' of greater size
+1>rootkit.c(467) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(472) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(472) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(472) : error C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>rootkit.c(472) : error C4312: 'type cast' : conversion from 'unsigned long' to 'PSID' of greater size
+1>rootkit.c(473) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(473) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(477) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(478) : error C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>rootkit.c(479) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(479) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(479) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(479) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(479) : error C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>rootkit.c(479) : error C4312: 'type cast' : conversion from 'unsigned long' to 'PSID' of greater size
+1>rootkit.c(480) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(480) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(483) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(484) : error C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>rootkit.c(485) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(485) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(492) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(492) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(495) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>rootkit.c(496) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>rootkit.c(497) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES * ' of greater size
+1>rootkit.c(497) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(497) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(530) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>rootkit.c(531) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>rootkit.c(532) : error C4312: 'type cast' : conversion from 'DWORD' to 'PLUID_AND_ATTRIBUTES * ' of greater size
+1>rootkit.c(534) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>rootkit.c(535) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES * ' of greater size
+1>rootkit.c(572) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(572) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(572) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(573) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(573) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(575) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(580) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(580) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(580) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID' of greater size
+1>rootkit.c(581) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(581) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(584) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(584) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(584) : error C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>rootkit.c(584) : error C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>rootkit.c(584) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(584) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(584) : error C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>rootkit.c(584) : error C4312: 'type cast' : conversion from 'unsigned long' to 'PSID' of greater size
+1>rootkit.c(585) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(585) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(589) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(592) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(593) : error C4311: 'type cast' : pointer truncation from 'PSID' to 'DWORD'
+1>rootkit.c(595) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(595) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(602) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>rootkit.c(603) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>rootkit.c(604) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES * ' of greater size
+1>rootkit.c(604) : error C4311: 'type cast' : pointer truncation from 'void *' to 'DWORD'
+1>rootkit.c(604) : error C4312: 'type cast' : conversion from 'DWORD' to 'PSID_AND_ATTRIBUTES' of greater size
+1>rootkit.c(607) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size
+1>rootkit.c(666) : error C4311: 'type cast' : pointer truncation from '_LIST_ENTRY *' to 'DWORD'
+1>rootkit.c(706) : error C4235: nonstandard extension used : '__asm' keyword not supported in this product
+1>rootkit.c(707) : error C2065: 'mov' : undeclared identifier
+1>rootkit.c(707) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>rootkit.c(707) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(707) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(707) : error C2143: syntax error : missing ';' before 'identifier'
+1>rootkit.c(707) : error C2065: 'eax' : undeclared identifier
+1>rootkit.c(707) : error C2065: 'fs' : undeclared identifier
+1>rootkit.c(707) : error C2143: syntax error : missing ';' before ':'
+1>rootkit.c(708) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>rootkit.c(708) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(708) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(708) : error C2143: syntax error : missing ';' before 'identifier'
+1>rootkit.c(708) : error C2059: syntax error : '['
+1>rootkit.c(709) : error C2146: syntax error : missing ';' before identifier 'address'
+1>rootkit.c(709) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(709) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(709) : error C2143: syntax error : missing ';' before 'identifier'
+1>rootkit.c(723) : error C4311: 'type cast' : pointer truncation from 'PDRIVER_OBJECT' to 'DWORD'
+1>rootkit.c(723) : error C4312: 'type cast' : conversion from 'DWORD' to 'PMODULE_ENTRY * ' of greater size
+1>rootkit.c(728) : error C4235: nonstandard extension used : '__asm' keyword not supported in this product
+1>rootkit.c(728) : error C2143: syntax error : missing ';' before 'type'
+1>rootkit.c(737) : error C4311: 'type cast' : pointer truncation from 'PMODULE_ENTRY' to 'DWORD'
+1>rootkit.c(776) : error C4235: nonstandard extension used : '__asm' keyword not supported in this product
+1>rootkit.c(777) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>rootkit.c(777) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(777) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(777) : error C2143: syntax error : missing ';' before 'identifier'
+1>rootkit.c(778) : error C2065: 'add' : undeclared identifier
+1>rootkit.c(778) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>rootkit.c(778) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(778) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(778) : error C2143: syntax error : missing ';' before 'identifier'
+1>rootkit.c(779) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>rootkit.c(779) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(779) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(779) : error C2143: syntax error : missing ';' before 'identifier'
+1>rootkit.c(779) : error C2059: syntax error : '['
+1>rootkit.c(780) : error C2065: 'and' : undeclared identifier
+1>rootkit.c(780) : error C2146: syntax error : missing ';' before identifier 'eax'
+1>rootkit.c(780) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(780) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(780) : error C2143: syntax error : missing ';' before 'identifier'
+1>rootkit.c(781) : error C2146: syntax error : missing ';' before identifier 'token'
+1>rootkit.c(781) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(781) : error C2144: syntax error : '<Unknown>' should be preceded by '<Unknown>'
+1>rootkit.c(781) : error C2143: syntax error : missing ';' before 'identifier'
+1>rootkit.c(803) : error C4311: 'type cast' : pointer truncation from 'PEPROCESS' to 'DWORD'
+1>rootkit.c(804) : error C4312: 'type cast' : conversion from 'DWORD' to 'DWORD *' of greater size
+1>rootkit.c(816) : error C4312: 'type cast' : conversion from 'DWORD' to 'LIST_ENTRY *' of greater size
+1>rootkit.c(817) : error C4311: 'type cast' : pointer truncation from '_LIST_ENTRY *' to 'DWORD'
+1>rootkit.c(819) : error C4312: 'type cast' : conversion from 'DWORD' to 'int *' of greater size

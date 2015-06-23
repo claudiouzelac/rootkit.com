@@ -1,0 +1,49 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: Autoloader - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"Release/Autoloader.res" /d "NDEBUG" "D:\My Projects\win_rootkit\Vanquish\Autoloader\Autoloader.rc"" 
+Creating temporary file "C:\DOCUME~1\r00t\LOCALS~1\Temp\RSP246.tmp" with contents
+[
+/nologo /Gz /MT /W3 /GX /Op /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINNT=0x0500 /Fp"Release/Autoloader.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\My Projects\win_rootkit\Vanquish\Injector.cpp"
+"D:\My Projects\win_rootkit\Vanquish\Utils.cpp"
+"D:\My Projects\win_rootkit\Vanquish\Autoloader\Autoloader.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\r00t\LOCALS~1\Temp\RSP246.tmp" 
+Creating temporary file "C:\DOCUME~1\r00t\LOCALS~1\Temp\RSP247.tmp" with contents
+[
+kernel32.lib user32.lib advapi32.lib /nologo /entry:"__VanquishEntryPoint" /subsystem:windows /incremental:no /pdb:"Release/Autoloader.pdb" /machine:I386 /nodefaultlib /out:"Release/Autoloader.exe" /opt:ref /opt:icf,5 /release 
+".\Release\Injector.obj"
+".\Release\Utils.obj"
+".\Release\Autoloader.obj"
+".\Release\Autoloader.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\r00t\LOCALS~1\Temp\RSP247.tmp"
+Creating temporary file "C:\DOCUME~1\r00t\LOCALS~1\Temp\RSP248.bat" with contents
+[
+@echo off
+copy .\Release\Autoloader.exe %SystemRoot%\vanquish.exe
+]
+Creating command line "C:\DOCUME~1\r00t\LOCALS~1\Temp\RSP248.bat"
+Compiling resources...
+Compiling...
+Injector.cpp
+Utils.cpp
+Autoloader.cpp
+Linking...
+<h3>Output Window</h3>
+Copying Service to System Root
+        1 file(s) copied.
+
+
+
+<h3>Results</h3>
+Autoloader.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

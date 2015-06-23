@@ -1,0 +1,65 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: Vanquish_dll - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"Release/Vanquish_dll.res" /d "NDEBUG" "D:\My Projects\win_rootkit\Vanquish\Vanquish_dll\Vanquish_dll.rc"" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP50.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /Fp"Release/Vanquish_dll.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\My Projects\win_rootkit\Vanquish\Injector.cpp"
+"D:\My Projects\win_rootkit\Vanquish\Utils.cpp"
+"D:\My Projects\win_rootkit\Vanquish\Vanquish_dll\Vanquish_dll.cpp"
+"D:\My Projects\win_rootkit\Vanquish\Vanquish_dll\vDllUtils.cpp"
+"D:\My Projects\win_rootkit\Vanquish\Vanquish_dll\vHideFiles.cpp"
+"D:\My Projects\win_rootkit\Vanquish\Vanquish_dll\vHideReg.cpp"
+"D:\My Projects\win_rootkit\Vanquish\Vanquish_dll\vPwdLog.cpp"
+"D:\My Projects\win_rootkit\Vanquish\Vanquish_dll\vSourceProtect.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP50.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP51.tmp" with contents
+[
+libcmt.lib ws2_32.lib mswsock.lib kernel32.lib user32.lib advapi32.lib /nologo /subsystem:windows /dll /incremental:no /pdb:"Release/vanquish.pdb" /machine:I386 /nodefaultlib /out:"Release/vanquish.dll" /implib:"Release/vanquish.lib" 
+".\Release\Injector.obj"
+".\Release\Utils.obj"
+".\Release\Vanquish_dll.obj"
+".\Release\vDllUtils.obj"
+".\Release\vHideFiles.obj"
+".\Release\vHideReg.obj"
+".\Release\vPwdLog.obj"
+".\Release\vSourceProtect.obj"
+".\Release\Vanquish_dll.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP51.tmp"
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP52.bat" with contents
+[
+@echo off
+copy .\Release\vanquish.dll %SystemRoot%\vanquish.dll
+]
+Creating command line "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP52.bat"
+Compiling resources...
+Compiling...
+Injector.cpp
+Utils.cpp
+Vanquish_dll.cpp
+vDllUtils.cpp
+vHideFiles.cpp
+vHideReg.cpp
+vPwdLog.cpp
+vSourceProtect.cpp
+Linking...
+   Creating library Release/vanquish.lib and object Release/vanquish.exp
+<h3>Output Window</h3>
+Copying DLL to SystemRoot
+        1 file(s) copied.
+
+
+
+<h3>Results</h3>
+vanquish.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

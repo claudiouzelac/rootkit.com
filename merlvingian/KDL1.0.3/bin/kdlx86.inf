@@ -1,0 +1,85 @@
+ 
+
+[Version]
+Signature = "$Windows NT$"
+Class     = Keyboard
+ClassGUID = {4D36E96B-E325-11CE-BFC1-08002BE10318}
+DriverVer = 10/01/2005, 1.0.0.1
+
+
+[DefaultInstall.NT]
+CopyFiles = @kdl.sys
+Include   = keyboard.inf
+AddReg    = kdl.HW.AddRegx86
+
+
+[kdl.HW.AddRegx86]
+HKLM,SYSTEM\CurrentControlSet\Control\Class\{4D36E96B-E325-11CE-BFC1-08002BE10318},"UpperFilters",0x00010008,"kdl"
+
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+
+[DefaultInstall.NT.Services]
+AddService = kdl, , kdl.Service.Install
+
+
+[kdl.Service.Install]
+DisplayName    = %service_desc%
+ServiceType    = 1
+StartType      = 0
+ErrorControl   = 0
+LoadOrderGroup = Keyboard Port
+ServiceBinary  = %12%\kdl.sys
+AddReg         = kdl.ExtendedOptions
+
+
+[kdl.ExtendedOptions]
+HKR,,MaxList,0x00010001,%MaxList%
+HKR,,Storage,0x00000000,%Storage%
+
+
+[SourceDisksFiles.ntx86]
+kdl.sys=1,,
+
+
+[SourceDisksNames]
+1 = %diskid1%,,,\
+
+
+
+; TESTING
+;
+;
+;
+
+[DefaultUninstall]
+DelFiles   = kdl.Driver
+DelReg	   = kdl.HW.DelRegx86
+
+[DefaultUninstall.Services]
+DelService = %service_desc%,,,
+
+[kdl.Driver]
+kdl.sys
+
+[kdl.HW.DelRegx86]
+HKLM,System\CurrentControlSet\Control\Class\{4D36E96B-E325-11CE-BFC1-08002BE10318},UpperFilters,0x00018002,kdl
+HKLM,"SYSTEM\currentcontrolset\services\kdl",,
+
+
+
+;
+;
+;
+;
+;
+
+
+[Strings]
+service_desc = "kdl"
+diskid1      = "kdl"
+Storage      = "\SystemRoot\kdl"
+MaxList      = 50
+

@@ -1,0 +1,5 @@
+TARGETNAME=kdl
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+SOURCES=kdl.c kdl.rc kdlthread.c kdlfile.c kdlkeyfilter.c kdlregistry.c

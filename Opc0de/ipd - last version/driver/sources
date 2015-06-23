@@ -1,0 +1,16 @@
+TARGETNAME=ipd
+TARGETPATH=.
+TARGETTYPE=DRIVER
+
+TARGETLIBS=
+
+SOURCES=hook.c \
+        driver.c \
+        h_file.c \
+        h_reg.c \
+	h_tok.c \
+	h_mem.c \
+	h_sys.c \
+        util.c \
+	dutil.c
+

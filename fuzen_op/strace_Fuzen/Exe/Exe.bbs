@@ -1,0 +1,3 @@
+[Batch Build]
+Exe - Win32 Debug=1
+Exe - Win32 Release=1

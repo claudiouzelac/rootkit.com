@@ -1,0 +1,8 @@
+TARGETNAME=..\..\hookA
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+DRIVERTYPE=FS
+
+SOURCES=..\chook.c  
+        
+

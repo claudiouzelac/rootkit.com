@@ -1,0 +1,36 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: JiurlPortHide - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "J:\winxp\DOCUME~1\JIURL\LOCALS~1\Temp\RSP311.tmp" with contents
+[
+/nologo /Gz /ML /W3 /Gm /Gi /Zi /O2 /I "g:\NTDDK\inc\ddk" /I "g:\NTDDK\inc" /D "WIN32" /D "NDEBUG" /D "_X86_" /D "i386" /D "DBG" /D _WIN32_WINNT=0x0500 /Fp"Release/JiurlPortHide.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"K:\project\JiurlPortHideDir_CN\JiurlPortHide\JiurlPortHide.cpp"
+]
+Creating command line "cl.exe @J:\winxp\DOCUME~1\JIURL\LOCALS~1\Temp\RSP311.tmp" 
+Creating temporary file "J:\winxp\DOCUME~1\JIURL\LOCALS~1\Temp\RSP312.tmp" with contents
+[
+ntoskrnl.lib hal.lib /nologo /entry:"DriverEntry" /incremental:no /pdb:"Release/JiurlPortHide.pdb" /machine:I386 /out:"../bin/JiurlPortHide.sys" /libpath:"g:\NTDDK\libfre\i386" /libpath:"g:\NTDDK\lib\i386\free" /subsystem:native /driver 
+.\Release\JiurlPortHide.obj
+.\Release\JiurlPortHide.res
+]
+Creating command line "link.exe @J:\winxp\DOCUME~1\JIURL\LOCALS~1\Temp\RSP312.tmp"
+<h3>Output Window</h3>
+Compiling...
+JiurlPortHide.cpp
+K:\project\JiurlPortHideDir_CN\JiurlPortHide\JiurlPortHide.cpp(164) : warning C4018: '<' : signed/unsigned mismatch
+K:\project\JiurlPortHideDir_CN\JiurlPortHide\JiurlPortHide.cpp(188) : warning C4018: '<' : signed/unsigned mismatch
+K:\project\JiurlPortHideDir_CN\JiurlPortHide\JiurlPortHide.cpp(192) : warning C4700: local variable 'TcpTable' used without having been initialized
+Linking...
+
+
+
+<h3>Results</h3>
+JiurlPortHide.sys - 0 error(s), 3 warning(s)
+</pre>
+</body>
+</html>

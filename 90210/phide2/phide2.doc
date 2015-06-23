@@ -1,0 +1,541 @@
+                     Bypassing Klister 0.4 With No Hooks
+                                      or
+                    Running a Controlled Thread Scheduler
+
+
+                                                      by 90210//HI-TECH
+
+=============================================================================
+
+1. Introduction
+2. A few words about how the NT scheduler works
+3. Code pullout
+3.1. Engine info
+3.2. Usage
+4. Phide2
+4.1. What is necessary to run a new scheduler
+4.2. How to find needed non-exported symbols
+4.2.1. NtYieldExecution
+4.2.2. KiWait[In/Out]ListHead, KeDispatcherReadyListHead, KiReadySummary,
+       KiStackOutSwapRequest
+4.2.3. KeBalanceSetManager, KeSwapProcessOrStack
+4.2.4. KiStackInSwapListHead, KiProcess[In/Out]SwapListHead, KiSwapEvent
+4.2.5. KiReadyQueueIndex
+4.2.6. PsActiveProcessHead
+4.3. Usage
+5. Conclusion
+6. Greets
+7. Related links
+
+=============================================================================
+
+1. Introduction
+---------------
+
+     Klister  0.4 by Joanna Rutkowska is a nice piece of code that enumerates
+ existing   threads   by   walking  KiWaitInListHead,  KiWaitOutListHead  and
+ KiDispatcherReadyListHead  array.  It  was  designed  specially  for w2k and
+ doesn't  handle  any other OS. Joanna makes an assumption that every thread,
+ either  waiting  or  ready for execution, must belong to one of these lists.
+ However,  we all remember Joanna's mistake in klister 0.3 - she thought that
+ every  process  in the OS must have unique process identifier. So, is Joanna
+ now  right  when she says that "it is rather impossible to remove threads of
+ the  hidden  process  from  the  just  mentioned  dispatcher internal lists,
+ because  then,  our hidden process, will not get any CPU time for execution"
+ [1]? The answer is no. It is possible to remove threads from those lists and
+ to  run  our  own  thread  scheduler  that  will  schedule  only  our hidden
+ threads.
+
+2. A few words about how the NT scheduler works
+-----------------------------------------------
+
+     Near  to  the  end of the phase 1 initialization MmInitSystem starts two
+ threads:  KeBalanceSetManager  and KeSwapProcessOrStack. This is the balance
+ set manager.
+     KeSwapProcessOrStack  starts  an  endless  loop in which it process swap
+ events. Swap events are signaled by KiSwapEvent. There are 4 types of them:
+     -  outswap kernel stacks (specified by BOOLEAN KiStackOutSwapRequest);
+     -  outswap  processes (processes that need outswapping are stored in the
+ KiProcessOutSwapListHead);
+     -  inswap  processes  (processes  that need inswapping are stored in the
+ KiProcessInSwapListHead);
+     -  inswap  kernel stacks (threads that need inswapping are stored in the
+ KiStackInSwapListHead).
+     KeBalanceSetManager    also    loops    forever    and    waits    for a
+ MmWorkingSetManagerEvent (to trim working sets when memory is low) and for a
+ timer.  Timer  event handler periodically sets KiStackOutSwapRequest to TRUE
+ and  signals  the  KiSwapEvent to inform KeSwapProcessOrStack that it has to
+ outswap  kernel  stacks  of  threads  that were waiting something for a long
+ time.   KeBalanceSetManager   also   calls   KiScanReadyQueues  that  boosts
+ prioriries  of  the  threads  in the ready queues (KiDispatcherReadyListHead
+ array).  For  each boosted thread KiReadyThread is called, so it is possible
+ that PRCB.NextThread is set to the boosted thread immediately (KiReadyThread
+ will preempt original NextThread).
+
+     KeUpdateSystemTime  is  called  directly from hal by the timer interrupt
+ handler. It then calls KeUpdateRunTime "to update the runtime of the current
+ thread,  update  the  runtime of the current thread's process, and decrement
+ the  current  thread's  quantum". When KeUpdateRunTime realizes that current
+ thread  is  not the Idle thread and its quantum is over, it requests quantum
+ end by firing a dispatch interrupt.
+     KiDispatchInterrupt   checks   if   quantum   end   was   requested  and
+ PRCB.NextThread  has  been already chosen. If so, it sets PRCB.CurrentThread
+ to  PRCB.NextThread,  zeroes  PRCB.NextThread and readies PRCB.CurrentThread
+ for execution by calling KiReadyThread.
+     KiReadyThread  checks  for thread's process state and inswaps its memory
+ if    the    process   was   outswapped   (it   inserts   process   in   the
+ KiProcessInSwapListHead  and  signals  KiSwapEvent).  If the thread's kernel
+ stack    was   not   resident,   KiReadyThread   inserts   thread   in   the
+ KiStackInSwapListHead  and  signals  KiSwapEvent  to  inswap thread's kernel
+ stack.
+     If  the thread's process memory and thread's kernel stack were resident,
+ KiReadyThread  searches for idle processor and if there is at least one idle
+ processor it sets respective PRCB's NextThread to specified thread. If there
+ are  many  idle  processors  preference  is  given  to  the  thread's  ideal
+ processor.
+     If there are no idle processors IdealProcessorPRCB.NextThread's priority
+ is  checked.  If  IdealProcessorPRCB.NextThread  can be preempted (specified
+ thread  has higher priority), KiReadyThread sets it to the specified thread.
+ If   IdealProcessorPRCB.NextThread  was  not  set  KiReadyThread  checks  if
+ IdealProcessorPRCB.CurrentThread  can  be preempted. If yes, then NextThread
+ is set to the specified thread and dispatch interrupt is re-requested.
+     If  no  thread  can  be  preempted  KiReadyThread  inserts thread in the
+ dispatcher  queue  (KiDispatcherReadyListHead)  selected by its priority and
+ corrects  respective KiReadySummary bit to indicate that this priority array
+ is not empty.
+     After  thread  has  been prepared, KiDispatchInterrupt calls SwapContext
+ that swaps context from one thread to the next.
+
+3. Code pullout
+---------------
+
+3.1. Engine info
+----------------
+
+     The  main idea is to create a copy of the system thread scheduler, patch
+ it  as  necessary  and  run  a  driver-created  thread  that  will share its
+ quantums  between all hidden threads (and only between them). So, we need an
+ engine  that  creates  a  copy  of  the  code  execution  tree starting from
+ specified entry point.
+     In general case it's impossible to analyze every control path from start
+ to the end, because:
+     - it's not always possible to differentiate data from code;
+     - the  code will very likely contain unpredictable jumps and calls, such
+ as call/jcc [mem32], call/jcc [reg32] and call/jcc reg32.
+     Because  of  that  the  code  pullout engine analyzes control paths till
+ unpredictable jumps. Here is a brief explanation of how the engine works.
+     1. User  specifies  names  of  exported  symbols,  ntoskrnl RVAs, VAs or
+ service  identifiers  as  entry  points  of the needed functions. In case of
+ service  ids  engine will determine their RVAs with method I've described in
+ "A more stable way to find real KiServiceTable" [2].
+     2. Engine finds a file of the loaded kernel. Then, it creates an "image"
+ mapping  of this file and opens it. It's assumed that hookers will not patch
+ this mapping on-the-fly: opened view is considered to be hook-free.
+     3. Two bit fields are created with size of ntoskrnl image. First (called
+ pCoverage) will be a "coverage" array (it will store information about bytes
+ belonging  to  the  execution  graph  of  the selected subs), second (caleld
+ pOpcodeStart) - array of opcode starts (for broken rels and other disasm bug
+ checks during disassembling process).
+     4.  For each RVA specified in the step 1 we begin to walk its code. That
+ is,  we  mark  instruction bytes in the pCoverage bitfield and opcodes start
+ bytes  in  the  pOpcodeStart.  We  enter  the  called subroutines and "fork"
+ execution  on  conditional  jumps.  Execution branch ends if we come to ret,
+ iret,  unpredictable  control  transfer or to the code that has been already
+ analyzed.  If  any  call/jcc  rel32/rel8 transfers execution to the analyzed
+ code,  but  first  byte of the destination don't have appropriate bit set in
+ the pOpcodeStart, disasembling process ends up with "general disasm error".
+     5. Copy  all  covered  bytes from our hook-free mapping to the allocated
+ non-paged  memory. Size of this pool equals to the number of covered bytes -
+ we  copy  code  regions without gaps between them. Also, while merging these
+ regions,  it's easy to find new RVAs of user-specified functions in the new,
+ reconstructed code and store them in the user buffer.
+     6. Engine  relinks  all  relative  jumps/calls in the output code, since
+ these  pointers are damaged after removing code that resides between covered
+ code  regions.  Short  jumps  (rel8)  will  not be expanded to near (rel32),
+ because  we  only  reduce  all  deltas.  Every  relXX  opcode  will have its
+ destination  in  the  covered  code  if  code  coverage  step  has been done
+ correctly.
+     7. The  last thing engine must do is fixing relocations. All relocations
+ that  point  into  the  covered  code are fixed to the imagebase of the real
+ ntoskrnl.  This  is a must, because we don't even try to deal with data - we
+ just  set  all  absolute  pointers to the appropriate ntoskrnl locations. We
+ treat  all  absolute pointers as drefs, and if there is any cref, it will go
+ unnoticed.  Execution  may be transferred there for example by "push offs32,
+ ret"  or  by  causing  an  exception in the seh frame. But as I think, there
+ isn't  much  sense to hook these crefs in the existing kernel image, because
+ they  are  deep  enough  in  the code - therefore, they are too low-level to
+ manipulate with well-known structs.
+
+3.2. Usage
+----------
+
+     An usage example you can see with the main Phide2 engine source. Here is
+ a proto for the Pullout engine.
+
+NTSTATUS
+NTAPI
+PullOutCode(
+         // filled array of IMPORT_ENTRY structures
+   IN PIMPORT_ENTRY Import,
+         // array for code entries in the resulting code
+   IN OUT PULONG CodeEntries,
+         // address of the buffer with the resulting code
+   OUT PUCHAR *NewCode OPTIONAL,
+         // size of the resulting code
+   OUT PULONG NewCodeSize OPTIONAL,
+         // imagebase of the module which imports need to be included to the code
+   IN PUCHAR pModuleForImportPatching OPTIONAL,
+         // user-defined callback for fixing absolute pointers in the resulting code
+   IN FIXRELOCS_CALLBACK FixRelocsCallback OPTIONAL
+);
+
+     A callback for patching relocs in the generated code:
+
+typedef
+VOID
+(__stdcall *FIXRELOCS_CALLBACK)(
+         // imagebase of the parsed module
+   PUCHAR pImage,
+         // address of the pointer in the resulting code
+   PULONG pFixedAddress,
+         // RVA of the pointer in the parsed module
+   ULONG OriginalFixupRva,
+         // RVA this pointer points to in the parsed module
+   ULONG TargetRva
+);
+
+     Engine may return one of the following status codes.
+
+ STATUS_SUCCESS
+     Everything went fine, copy of the code is ready to use.
+
+ STATUS_PASSIVE_LEVEL_REQUIRED
+     PullOutCode() was called at raised IRQL.
+
+ STATUS_NTOSKRNL_NOT_FOUND
+     Engine has failed to find kernel image on disk. Weird.
+
+ STATUS_MAP_IMAGE_FAILED
+     Engine has failed to map kernel image.
+
+ STATUS_ADD_FUNCTION_FAILED
+     Engine  has  failed  to add a function to the list of entry points for a
+ code walker (export not found, for example).
+
+ STATUS_COVERAGE_ERROR
+     Engine has failed to build a code tree.
+
+ STATUS_CODE_REBUILDING_FAILED
+     Engine has failed to fix copied code.
+
+ STATUS_UNSUCCESSFUL
+     General error occured.
+
+4. Phide2
+---------
+
+4.1. What is necessary to run a new scheduler
+---------------------------------------------
+
+     When  we  exclude  threads  from KiWaitInListHead, KiWaitOutListHead and
+ KiDispatcherReadyListHead klister doesn't see them any more. The problem is:
+ how  to  make  those  excluded  threads  schedulable?  We  have to give them
+ quantums  from  time  to  time.  But  we  cannot call KiReadyThread, because
+ SwapContext  will bugcheck system when it will attempt to read data from the
+ hidden  thread's  context,  because  if the hidden thread was in the waiting
+ state with its stack outswapped (a very common situation) then
+     - unlinking  from  KiWaitIn/OutListHead  makes KE unable to successfully
+ satisfy thread's wait;
+     - thread's stack cannot be inswapped.
+     The  solution  is  simple:  we  should create a new lists, remove hidden
+ threads  from  original  lists,  place  them  to  the ours and then create a
+ sufficient  copy  of  the  scheduler code with all pointers to the old lists
+ patched to the our lists.
+     When  we  will  call  that  copied  code we will be sure that one of the
+ hidden  threads is tested to have higher priority than the current (probably
+ not  hidden)  thread,  thus  making current thread preempted if it has lower
+ priority.  Furthermore,  hidden  thread  will never be moved to the original
+ scheduler lists because our copy of the code just doesn't know where the old
+ lists are.
+     There is a handy function NtYieldExecution that "yields execution to any
+ ready  thread for up to one quantum". If we patch its full execution tree to
+ use  our  lists  instead of original, it will schedule to execution only our
+ threads.
+     Another  thing  we  should do is to run our own balance manager, because
+ someone  must  inswap kernel stacks of the hidden threads when their wait is
+ just satisfied and they don't have their kernel stacks resident.
+
+     These   pointers   must   be   patched   in   the   execution   tree  of
+ NtYieldExecution,  KeBalanceSetManager  and KeSwapProcessOrStack to separate
+ our copy of scheduler code from the original one and make it viable:
+
+ KiDispatcherReadyListHead (array of 32 LIST_ENTRY - patch Flink and Blink)
+ KiWaitInListHead (LIST_ENTRY)
+ KiWaitOutListHead (LIST_ENTRY)
+ (XP specific: only KiWaitListHead LIST_ENTRY instead of above two)
+
+ KiStackInSwapListHead (NT, 2k: LIST_ENTRY, XP: SINGLE_LIST_ENTRY)
+ KiProcessInSwapListHead (NT, 2k: LIST_ENTRY, XP: SINGLE_LIST_ENTRY)
+ KiProcessOutSwapListHead (NT, 2k: LIST_ENTRY, XP: SINGLE_LIST_ENTRY)
+
+ KiReadySummary (ULONG)
+ KiReadyQueueIndex (ULONG)
+ KiStackOutSwapRequest (BOOLEAN)
+ KiSwapEvent (KEVENT)
+ KiSwappingThread (PETHREAD)
+ (XP specific: NT and 2k don't have this global)
+
+ We need 4 threads to make our scheduler online.
+     1st is the patched KeBalanceSetManager;
+     2nd is the patched KeSwapProcessOrStack;
+     3rd  will  periodically  exclude  hidden objects (threads and processes)
+ from  the  original  lists  and  insert  them in the our new lists - this is
+ needed  because some functions like to place threads to the dispatcher lists
+ (KeSetThreadPriority, etc);
+     4th  will periodically call patched NtYieldExecution to give quantums to
+ the hidden threads.
+
+4.2. How to find needed non-exported symbols
+--------------------------------------------
+
+     Hardcoded offsets are Really Bad. There are too many different ntoskrnls
+ out  there  - checked/free builds, uni/multiprocessor, PAE, various hotfixes
+ etc.  So  I  decided  to find all needed symbols by analyzing the kernel and
+ without any code signatures.
+
+4.2.1. NtYieldExecution
+-----------------------
+
+     This is the easiest one. ZwYieldExecution is exported by ntoskrnl. Thus,
+ we  can  find  its service id by reading imm32 in the first "mov eax, imm32"
+ instruction.  Then  we should get NtYieldExecution address by looking to the
+ KiServiceTable array, which may be found this way: [2].
+
+4.2.2. KiWait[In/Out]ListHead, KeDispatcherReadyListHead, KiReadySummary
+------------------------------------------------------------------------
+
+     First, we find KiWaitInListHead and KiWaitOutListHead (KiWaitListHead in
+ XP).  It can be done by walking execution tree of the KeWaitForSingleObject,
+ KeWaitForMultipleObjects  and  KeDelayExecutionThread (all exported) without
+ entering  their  subfunctions.  For  each function we make a list of globals
+ that are used by it (without subfunctions). Then we compute the intersection
+ of    these   3   sets   of   globals.   This   intersection   consists   of
+ KiWaitInListHead.Flink,   KiWaitOutListHead.Flink,   KeTickCount.LowPart  in
+ NT/2k and KiWaitListHead.Flink, KiWaitListHead.Blink, KeTickCount.LowPart in
+ XP. KeTickCount is also exported, so we easily exclude it from the resulting
+ set. If the remaining two set elements have next addresses (Flink/Blink), we
+ have  a  xp kernel with KiWaitListHead. Otherwise, we found KiWaitInListHead
+ and  KiWaitOutListHead.  We  don't  care  which  of  two  found  globals  is
+ KiWaitInListHead and which is KiWaitOutListHead.
+     Second,  we  find  KiDispatcherReadyListHead and KiReadySummary. We find
+ shared  globals  of  KeSetAffinityThread  and  NtYieldExecution in NT/2k and
+ KeDelayExecutionThread  and  NtYieldExecution in XP. This way we should find
+ KiDispatcherReadyListHead  and  KiReadySummary,  but  we  don't know what is
+ what.  KiDispatcherReadyListHead is a pointer, so it will be strange to meet
+ "or  KiDispatcherReadyListHead,  <some>"  generated by the compiler. But ORs
+ are  very  common  for  KiReadySummary because of the SetMember macro. So we
+ enumerate all absolute pointer addressing in the ntoskrnl and check for some
+ kind  of  OR  instruction that modifies one of two given globals. The global
+ for   which   OR  is  found  will  be  KiReadySummary,  the  other  will  be
+ KiDispatcherReadyListHead.
+
+4.2.3. KeBalanceSetManager, KeSwapProcessOrStack
+------------------------------------------------
+
+     These   two  globals  are  pushed  as  StartRoutine  parameters  to  the
+ PsCreateSystemThread  calls made by MmInitSystem. We begin to walk code from
+ the ntoskrnl entry point (it will come to MmInitSystem sooner or later). For
+ every  "push"  and "pop" we met we properly correct a virtual "esp" and save
+ every  "push"  argument.  When  we come to a "call PsCreateSystemThread", we
+ look to the our stack trace buffer and find 6th parameter - this will be the
+ StartRoutine. We don't care about subs/adds to esp, because compiler doesn't
+ generate them when he makes a call to the stdcall function.
+     After  we  find  another  StartRoutine  we should check - is it really a
+ KeBalanceSetManager  or  KeSwapProcessOrStack.  We make a list of calls made
+ by this StartRoutine and check if found set of calls includes the "signature
+ set" for KeBalanceSetManager and KeSwapProcessOrStack.
+ NT4 KeBalanceSetManager should call at least
+     - KeSetPriorityThread,
+     - KeInitializeTimer,
+     - KeSetTimer,
+     - KeWaitForMultipleObjects.
+ NT4 KeSwapProcessOrStack should call at least
+     - MmQuerySystemSize,
+     - KeSetPriorityThread,
+     - KeWaitForSingleObject.
+ 2k/XP KeBalanceSetManager should call at least
+     - MmQuerySystemSize,
+     - KeSetPriorityThread,
+     - KeInitializeTimer,
+     - KeSetTimer,
+     - KeWaitForMultipleObjects.
+ 2k/XP KeSwapProcessOrStack should call at least
+     - KeSetPriorityThread,
+     - KeWaitForSingleObject.
+     This   check   is  sufficient  to  distinguish  KeBalanceSetManager  and
+ KeSwapProcessOrStack threads from the others.
+
+4.2.4. KiStackInSwapListHead, KiProcess[In/Out]SwapListHead, KiSwapEvent,
+       KiStackOutSwapRequest
+-------------------------------------------------------------------------
+
+     Now   we   find   globals   used  by  the  KeBalanceSetManager  and  the
+ KeSwapProcessOrStack. KeSwapProcessOrStack uses these globals:
+     - KiSwapEvent,
+     - KiStackOutSwapRequest,
+     - KiProcessOutSwapListHead,
+     - KiProcessInSwapListHead,
+     - KiStackInSwapListHead,
+     - KiStackProtectTime  (NT4  only  -  it was moved to KeBalanceSetManager
+ later),
+     - KiSwappingThread (XP only).
+ KeBalanceSetManager uses these globals:
+     - MmWorkingSetManagerEvent,
+     - KiStackProtectTime (NT4 KeBalanceSetManager doesn't have it),
+     - KiStackOutSwapRequest,
+     -   KiSwapEvent  (XP  KeBalanceSetManager  doesn't  have  it,  it  calls
+ KiSetSwapEvent instead).
+     That  is, KiStackOutSwapRequest is always shared and we found it. Now we
+ should  find  KiSwapEvent.  Note that KiSwapEvent is the only PKEVENT in the
+ globals  used  by  KeSwapProcessOrStack  -  we will use this. The idea is to
+ enumerate  all  pointers  in  the  ntoskrnl  and  find  those that look like
+ PKEVENTs  - they should have "KEVENT.Header.Size=4" mov instruction. We know
+ that  KiSwapEvent  is  a  SynchronizationEvent. That is, it's initialized by
+ KeInitializeEventMacro    which   has   the   following   mov   instruction:
+ "KEVENT.Header.Type  =  SynchronizationEvent". By checking presence of these
+ two  attributes  in the KeSwapProcessOrStack globals we find the KiSwapEvent
+ pointer.
+     Next,   we  should  find  three  Ki*ListHead  pointers.  If  we  examine
+ KeSwapProcessOrStack,  we  see  that  the  first  global used by it in XP is
+ KiSwappingThread,    and    in    NT4   it   is   KiStackProtectTime.   2k's
+ KeSwapProcessOrStack has only 5 globals, two of them we've already found. If
+ the  kernel  is  NT4  or XP we simply skip its first used global. The rest 3
+ globals   are   those   we're   searching   for:  KiStackInSwapListHead  and
+ KiProcess[In/Out]SwapListHead.
+     The  last  thing to do is to find a KiStackInSwapListHead in those three
+ pointers.   This   is   needed,  because  new  scheduler's  balmgr  operates
+ differently  with  processes  and  threads  lists. We will use the fact that
+ KiStackInSwapListHead    is    always    processed    by   last   from   the
+ KiProcess[In/Out]SwapListHead  and KiStackInSwapListHead in KiInitSystem and
+ KeSwapProcessOrStack.  If  we find a code that uses all three of those lists
+ very  close to each other (this is only in two places of the kernel - in the
+ initialization    of   these   lists   -   KiInitSystem   -   and   in   the
+ KeSwapProcessOrStack  branching)  we  take the last one and that will be the
+ KiStackInSwapListHead.
+
+4.2.5. KiReadyQueueIndex
+------------------------
+
+     KiReadyQueueIndex is used only by the KiScanReadyQueues, which is called
+ by   KeBalanceSetManager.   So,  we  must  check  all  subfunctions  of  the
+ KeBalanceSetManager.  For  every  function  it calls, we build a list of the
+ globals that are used by it. KiReadyQueueIndex uses these globals:
+     - KiReadySummary,
+     - KeTickCount,
+     - KiReadyQueueIndex,
+     - KiDispatcherReadyListHead,
+     -  two  data  offsets  for arguments to the RtlAssert call (only checked
+ builds).
+     We    know    addresses   of   the   KeTickCount,   KiReadySummary   and
+ KiDispatcherReadyListHead,  and  we  assume that KiReadyQueueIndex cannot be
+ pushed  on  stack  (it's  value is only MOVed actually). This is enough: the
+ KiScanReadyQueues  candidate  must  have  4  globals on free builds and 6 on
+ checked  (two  of them must be PUSHed), 3 of them must be already found. The
+ last  check  for the KiReadyQueueIndex is this: its data value in the kernel
+ image (not in memory) should be 1.
+
+4.2.6. PsActiveProcessHead
+--------------------------
+
+     This address is not necessary for the new scheduler, but we have to find
+ it since we're not going to hide only from klister.
+     We  will  use the fact that crash dump file header format is not changed
+ between  NT  and  XP. Dump files header starts from "PAGEDUMP" signature and
+ they  have PsActiveProcessHead value stored at file offset +0x1C. Dump files
+ are  written by IoWriteCrashDump function. The write buffer is prepared this
+ way:  1st  IoWriteCrashDump  fills buffer memory with "PAGE", then "DUMP" is
+ written  at  offset  +0x4.  After  a while PsActiveProcessHead is written at
+ offset +0x1C by the "mov dword ptr [reg32+1Ch], offset _PsActiveProcessHead"
+ instruction.  So,  our  algo  will  be  simple:  we enumerate all executable
+ sections  in  the  ntoskrnl  and  find the "PAGE" constant. Then we check if
+ there  is  a "mov [reg32+4], 'PMUD'" instruction nearby. If it is, we search
+ for  the  "mov [reg32+1Ch], imm32" instruction in the next 100 instructions.
+ If  we found this imm32, we check if it is a pointer and not a data constant
+ by walking all absolute pointers in the kernel image.
+
+4.3. Usage
+----------
+
+NTSTATUS ProcessHide(
+        IN ISPROCESSHIDDEN_CALLBACK IsProcessHidden
+);
+
+     Main  engine  entry.  Must  be  called  at  PASSIVE_LEVEL. The parameter
+ specifies  the  user  callback  function  that  will  take a PEPROCESS as an
+ argument  and will decide - should this process be hidden or not. Don't even
+ think about hiding System (#8) process ;)
+
+NTSTATUS ShutdownPhide(
+);
+
+     Shutdown  function. Note that it doesn't stop two patched system threads
+ (the   KeBalanceSetManager  and  the  KeSwapProcessOrStack).  Therefore,  it
+ doesn't free their code memory.
+
+typedef
+BOOLEAN
+(__stdcall *ISPROCESSHIDDEN_CALLBACK)(
+        PEPROCESS Process
+);
+
+     User supplied function that makes a main decision.
+
+
+     Engine may return one of the following status codes.
+
+ STATUS_SUCCESS
+     Everything went fine, scheduler is online.
+
+ STATUS_ALREADY_STARTED
+     An attempt to run engine twice. Interact with your callback instead.
+
+ STATUS_UNSUPPORTED_OS
+     This OS is not supported by the engine (2k3 and above).
+
+     Refer to the 3.2. point for these.
+
+ STATUS_PASSIVE_LEVEL_REQUIRED
+ STATUS_NTOSKRNL_NOT_FOUND
+ STATUS_MAP_IMAGE_FAILED
+ STATUS_ADD_FUNCTION_FAILED
+ STATUS_COVERAGE_ERROR
+ STATUS_CODE_REBUILDING_FAILED
+ STATUS_UNSUCCESSFUL
+
+5. Conclusion
+-------------
+
+     As  you can see, it's possible to evade klister-like tools with no hooks
+ in  just  a  few  kilobytes of code. So if Joanna has written a private tool
+ for  detecting hidden processes that works on all NTs I would like to see it
+ ;)  It's  funny  to  write  a  powerful hiding code for OS that doesn't have
+ advanced  process  detector available to the public yet (I mean NT4 and XP).
+ All  that  "security  thru  obscurity"  private tool concept is a ridiculous
+ thing, isn't it? Btw, 2k3 server support is yet to come ;)
+
+6. Greets
+---------
+
+     - Opc0de, who helped me with ideas and bughunting;
+     - nobodi, who helped the "scheduler idea" to be born ;)
+     - unknown heroes who made nt4 and w2k sources available to the public;
+     - Joanna Rutkowska, for writing klister :)
+     - all engine betatesters.
+
+7. Related links
+----------------
+
+1. Joanna Rutkowska. "Advanced Windows 2000 Rootkit Detection"
+    http://www.blackhat.com/presentations/bh-usa-03/bh-us-03-rutkowski/bh-us-03-rutkowski-paper.pdf
+2. 90210. "A more stable way to find real KiServiceTable"
+    http://www.rootkit.com/newsread.php?newsid=176.

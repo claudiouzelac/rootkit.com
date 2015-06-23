@@ -1,0 +1,252 @@
+typedef void (* COMMANDPROC)(int, PVOID);
+
+typedef struct tagCOMMAND
+{
+	BYTE		byCode;
+	COMMANDPROC	proc;
+} COMMAND, * LPCOMMAND;
+
+typedef struct tagCOMMANDPACKET
+{
+	BYTE	byCode;
+	WORD	cchData;
+	BYTE	byData[];
+} COMMANDPACKET, * LPCOMMANDPACKET;
+
+
+// added for creating win32 process
+typedef struct _PORT_MESSAGE {
+	USHORT DataSize;
+	USHORT MessageSize;
+	USHORT MessageType;
+	USHORT VirtualRangesOffset;
+	CLIENT_ID ClientId;
+	ULONG MessageId;
+	ULONG SectionSize;
+	// UCHAR Data[];
+} PORT_MESSAGE, *PPORT_MESSAGE;
+
+typedef struct _PROCESS_INFORMATION
+{
+	ULONG hProcess;
+	ULONG hThread;
+	ULONG pid;
+	ULONG tid;
+} PROCESS_INFORMATION, *PPROCESS_INFORMATION;
+
+typedef struct _PROCESS_PARAMETERS {
+	ULONG AllocationSize;
+	ULONG Size;
+	ULONG Flags;
+	ULONG Reserved;
+	LONG Console;
+	ULONG ProcessGroup;
+	HANDLE hStdInput;
+	HANDLE hStdOutput;
+	HANDLE hStdError;
+	UNICODE_STRING CurrentDirectoryName;
+	HANDLE CurrentDirectoryHandle;
+	UNICODE_STRING DllPath;
+	UNICODE_STRING ImageFile;
+	UNICODE_STRING CommandLine;
+	PWSTR Environment;
+	ULONG dwX;
+	ULONG dwY;
+	ULONG dwXSize;
+	ULONG dwYSize;
+	ULONG dwXCountChars;
+	ULONG dwYCOuntChars;
+	ULONG dwFillAttribute;
+	ULONG dwFlags;
+	ULONG wShowWindow;
+	UNICODE_STRING WindowTitle;
+	UNICODE_STRING Desktop;
+	UNICODE_STRING Reserved2;
+	UNICODE_STRING Reserved3;
+} PROCESS_PARAMETERS, *PPROCESS_PARAMETERS;
+
+
+
+struct CSRSS_MESSAGE {
+	ULONG Unknown1;
+	ULONG Opcode;
+	ULONG Status;
+	ULONG Unknown2;
+};
+
+typedef enum _SECTION_INFORMATION_CLASS {
+	SectionBasicInformation,
+	SectionImageInformation
+} SECTION_INFORMATION_CLASS;
+
+typedef struct _SECTION_IMAGE_INFORMATION
+{
+	PVOID EntryPoint;
+	ULONG Unknown1;
+	ULONG StackReserve;
+	ULONG StackCommit;
+	ULONG SubSystem;
+	USHORT MinorSubsystemVersion;
+	USHORT MajorSubsystemVersion;
+	ULONG Unknown2;
+	ULONG Characteristics;
+	USHORT ImageNumber;
+	BOOLEAN Executable;
+	UCHAR Unknown3;
+	ULONG Unknown4[4];
+} SECTION_IMAGE_INFORMATION, *PSECTION_IMAGE_INFORMATION;
+
+typedef struct _USER_STACK {
+	PVOID FixedStackBase;
+	PVOID FixedStackLimit;
+	PVOID ExpandableStackBase;
+	PVOID ExpandableStackLimit;
+	PVOID ExpandableStackBottom;
+} USER_STACK, *PUSER_STACK;
+
+
+typedef struct _SYSTEM_MODULE_INFORMATION
+{
+	ULONG Reserved[2];
+	PVOID Base;
+	ULONG Size;
+	ULONG Flags;
+	USHORT Index;
+	USHORT Unknown;
+	USHORT LoadCount;
+	USHORT ModuleNameOffset;
+	USHORT ImageName[256];
+} SYSTEM_MODULE_INFORMATION, *PSYSTEM_MODULE_INFORMATION;
+
+
+typedef struct _IMAGE_DATA_DIRECTORY {
+    DWORD   VirtualAddress;
+    DWORD   Size;
+} IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
+
+#define IMAGE_NUMBEROF_DIRECTORY_ENTRIES    16
+
+
+//
+// File header format.
+//
+
+typedef struct _IMAGE_FILE_HEADER {
+    WORD    Machine;
+    WORD    NumberOfSections;
+    DWORD   TimeDateStamp;
+    DWORD   PointerToSymbolTable;
+    DWORD   NumberOfSymbols;
+    WORD    SizeOfOptionalHeader;
+    WORD    Characteristics;
+} IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;
+
+//
+// Optional header format.
+//
+
+typedef struct _IMAGE_OPTIONAL_HEADER {
+    //
+    // Standard fields.
+    //
+
+    WORD    Magic;
+    BYTE    MajorLinkerVersion;
+    BYTE    MinorLinkerVersion;
+    DWORD   SizeOfCode;
+    DWORD   SizeOfInitializedData;
+    DWORD   SizeOfUninitializedData;
+    DWORD   AddressOfEntryPoint;
+    DWORD   BaseOfCode;
+    DWORD   BaseOfData;
+
+    //
+    // NT additional fields.
+    //
+
+    DWORD   ImageBase;
+    DWORD   SectionAlignment;
+    DWORD   FileAlignment;
+    WORD    MajorOperatingSystemVersion;
+    WORD    MinorOperatingSystemVersion;
+    WORD    MajorImageVersion;
+    WORD    MinorImageVersion;
+    WORD    MajorSubsystemVersion;
+    WORD    MinorSubsystemVersion;
+    DWORD   Win32VersionValue;
+    DWORD   SizeOfImage;
+    DWORD   SizeOfHeaders;
+    DWORD   CheckSum;
+    WORD    Subsystem;
+    WORD    DllCharacteristics;
+    DWORD   SizeOfStackReserve;
+    DWORD   SizeOfStackCommit;
+    DWORD   SizeOfHeapReserve;
+    DWORD   SizeOfHeapCommit;
+    DWORD   LoaderFlags;
+    DWORD   NumberOfRvaAndSizes;
+    IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
+} IMAGE_OPTIONAL_HEADER32, *PIMAGE_OPTIONAL_HEADER32;
+
+//
+// Export Format
+//
+
+typedef struct _IMAGE_EXPORT_DIRECTORY {
+    DWORD   Characteristics;
+    DWORD   TimeDateStamp;
+    WORD    MajorVersion;
+    WORD    MinorVersion;
+    DWORD   Name;
+    DWORD   Base;
+    DWORD   NumberOfFunctions;
+    DWORD   NumberOfNames;
+    DWORD   AddressOfFunctions;     // RVA from base of image
+    DWORD   AddressOfNames;         // RVA from base of image
+    DWORD   AddressOfNameOrdinals;  // RVA from base of image
+} IMAGE_EXPORT_DIRECTORY, *PIMAGE_EXPORT_DIRECTORY;
+
+#define IMAGE_DIRECTORY_ENTRY_EXPORT          0   // Export Directory
+
+
+typedef struct _IMAGE_DOS_HEADER {      // DOS .EXE header
+    WORD   e_magic;                     // Magic number
+    WORD   e_cblp;                      // Bytes on last page of file
+    WORD   e_cp;                        // Pages in file
+    WORD   e_crlc;                      // Relocations
+    WORD   e_cparhdr;                   // Size of header in paragraphs
+    WORD   e_minalloc;                  // Minimum extra paragraphs needed
+    WORD   e_maxalloc;                  // Maximum extra paragraphs needed
+    WORD   e_ss;                        // Initial (relative) SS value
+    WORD   e_sp;                        // Initial SP value
+    WORD   e_csum;                      // Checksum
+    WORD   e_ip;                        // Initial IP value
+    WORD   e_cs;                        // Initial (relative) CS value
+    WORD   e_lfarlc;                    // File address of relocation table
+    WORD   e_ovno;                      // Overlay number
+    WORD   e_res[4];                    // Reserved words
+    WORD   e_oemid;                     // OEM identifier (for e_oeminfo)
+    WORD   e_oeminfo;                   // OEM information; e_oemid specific
+    WORD   e_res2[10];                  // Reserved words
+    LONG   e_lfanew;                    // File address of new exe header
+  } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
+
+typedef struct _IMAGE_NT_HEADERS {
+    DWORD Signature;
+    IMAGE_FILE_HEADER FileHeader;
+    IMAGE_OPTIONAL_HEADER32 OptionalHeader;
+} IMAGE_NT_HEADERS, *PIMAGE_NT_HEADERS;
+
+
+
+
+void process_rootkit_command(char *theCommand);
+
+///////////////////////////////////////////////////////////
+// command functions
+///////////////////////////////////////////////////////////
+void command_get_proclist();
+
+extern BOOL g_hide_directories;
+extern BOOL g_hide_proc;
+extern BOOL g_sniff_keys;

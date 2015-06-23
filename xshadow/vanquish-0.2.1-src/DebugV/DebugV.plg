@@ -1,0 +1,33 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: DebugV - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\r00t\LOCALS~1\Temp\RSPD3.tmp" with contents
+[
+/nologo /Gz /MLd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "_MBCS" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINNT=0x0500 /Fp"Debug/DebugV.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\My Projects\win_rootkit\Vanquish\DebugV\DebugV.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\r00t\LOCALS~1\Temp\RSPD3.tmp" 
+Creating temporary file "C:\DOCUME~1\r00t\LOCALS~1\Temp\RSPD4.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/DebugV.pdb" /debug /machine:I386 /out:"Debug/DebugV.exe" /pdbtype:sept 
+".\Debug\DebugV.obj"
+]
+Creating command line "link.exe @C:\DOCUME~1\r00t\LOCALS~1\Temp\RSPD4.tmp"
+<h3>Output Window</h3>
+Compiling...
+DebugV.cpp
+D:\My Projects\win_rootkit\Vanquish\DebugV\DebugV.cpp(74) : warning C4101: 'pi' : unreferenced local variable
+Linking...
+
+
+
+<h3>Results</h3>
+DebugV.exe - 0 error(s), 1 warning(s)
+</pre>
+</body>
+</html>

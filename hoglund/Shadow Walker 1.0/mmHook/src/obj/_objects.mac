@@ -1,0 +1,30 @@
+386_OBJECTS= \
+    $(_OBJ_DIR)\i386\driverentry.obj \
+    $(_OBJ_DIR)\i386\mmhook_supportroutines.obj \
+    $(_OBJ_DIR)\i386\mmhook_lowinterface.obj \
+    $(_OBJ_DIR)\i386\mmhook_highinterface.obj \
+    $(_OBJ_DIR)\i386\idthook.obj \
+    $(_OBJ_DIR)\i386\module.obj
+
+PASS0_386_OBJECTS=
+
+IA64_OBJECTS= \
+    $(_OBJ_DIR)\ia64\driverentry.obj \
+    $(_OBJ_DIR)\ia64\mmhook_supportroutines.obj \
+    $(_OBJ_DIR)\ia64\mmhook_lowinterface.obj \
+    $(_OBJ_DIR)\ia64\mmhook_highinterface.obj \
+    $(_OBJ_DIR)\ia64\idthook.obj \
+    $(_OBJ_DIR)\ia64\module.obj
+
+PASS0_IA64_OBJECTS=
+
+AMD64_OBJECTS= \
+    $(_OBJ_DIR)\amd64\driverentry.obj \
+    $(_OBJ_DIR)\amd64\mmhook_supportroutines.obj \
+    $(_OBJ_DIR)\amd64\mmhook_lowinterface.obj \
+    $(_OBJ_DIR)\amd64\mmhook_highinterface.obj \
+    $(_OBJ_DIR)\amd64\idthook.obj \
+    $(_OBJ_DIR)\amd64\module.obj
+
+PASS0_AMD64_OBJECTS=
+

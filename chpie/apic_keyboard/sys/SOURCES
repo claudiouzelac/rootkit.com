@@ -1,0 +1,6 @@
+TARGETNAME=apicrout
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+SOURCES=apicrout.c
+

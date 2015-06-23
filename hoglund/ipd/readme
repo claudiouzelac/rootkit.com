@@ -1,0 +1,180 @@
+Name   : Integrity Protection Driver (IPD)
+Version: 1.0 - First Release
+Purpose: Prevent installation of rootkit device drivers on NT/2000
+License: Open Source
+
+Integrity Protection Driver (IPD)
+---------------------------------
+
+The IPD is an Open Source device driver designed to prohibit the
+installation of new services and drivers and to protect existing drivers
+from tampering. It installs on Windows NT or Windows 2000 computers.
+
+Updated information about this driver may be found at
+
+      http://www.pedestalsoftware.com/
+
+
+Motivation
+----------
+
+This driver was created to provide some protection against rootkit
+installation by attempting to block any new kernel drivers from being
+installed and executed. This will help to prevent tojan hiding from
+integrity checking programs such as Intact.
+
+
+What It Does
+------------
+
+The IPD uses undocumented service function hooking to alter the access
+mask on driver-related registry keys and files to be read-only no matter
+what account is requesting access. This effectively prohibits the
+Service Control Manager or user applications from changing, adding or
+deleting service and driver keys and values in the registry and from
+adding to or replacing existing driver binaries in the
+%SystemRoot%\system32\drivers directory.
+
+
+Is there a way to circumvent the IPD?
+-------------------------------------
+
+If there is a mechanism to load and execute a device driver without
+using Service Control Manager functions and without the need to write
+to the Services portion of the registry, then there may be a way to
+circumvent the IPD. We are not aware of any such machanism to do
+this. However, if one is discovered the IPD could be ammended to hook
+and alter the functions used.
+
+
+What's Included
+---------------
+
+You should have received the following files with your distribution:
+
+  ipd.sys         -- the compiled device driver for i386 computers
+  ipdinstall.exe  -- the installation/remove program
+  readme          -- this file
+  driver/*        -- source files
+
+
+Installation
+------------
+
+To install the IPD device driver, unzip all files into a directory. 
+Execute the ipdinstall.exe program to install and start the driver:
+
+	ipdinstall.exe install
+
+The driver is installed for "automatic" startup, which means it will
+automatically start at system boot. The driver engages, or begins
+protecting, 20 minutes after it has started.
+
+
+IMPORTANT:
+
+* Once the Driver is started it may not be stopped.
+
+* Once the Driver is engaged it may not be removed. Even if the
+appropriate Service Control Manager function call marks the driver for
+deletion, the driver will still not be removed. 
+
+
+Removal
+-------
+
+YOU MUST REMOVE THE IPD DEVICE DRIVER WITHIN 20 MINUTES OF STARTUP,
+AND THEN REBOOT THE SYSTEM. If the driver has already engaged then you
+will have to reboot and remove it within 20 mintes of boot up.
+
+The remove command is:
+
+	ipdinstall.exe remove
+
+
+Support
+-------
+
+There is no support. New versions can be found at 
+http://www.pedestalsoftware.com. Bug reports should be sent to 
+support@pedestalsoftware.com.
+
+
+References
+----------
+
+Undocumented Windows NT by Dabak, Phadke and Borate; M&T Books, 1999.
+Microsoft Windows DDK.
+
+
+Copyright and Grant of Use
+--------------------------
+
+Copyright (c) 2000 Pedestal Software, LLC.  All rights reserved.  
+
+By using this software, YOU AGREE to the following license terms.  IF
+YOU DO NOT AGREE, YOU MAY NOT USE THE SOFTWARE.
+
+(1) Pedestal Software believes that this software is safe for use in
+normal circumstances, and has performed what it believes to be
+reasonable but non-exhaustive testing to verify this. The software is
+intended for use only by experienced and knowledgeable computer
+professionals. IT IS PROVIDED "AS IS, WITH ALL FAULTS," including source
+code so that the user can study the source code and independently
+determine the software's suitability. Pedestal Software makes no
+warranty of any kind, express or implied, and DISCLAIMS ANY AND ALL
+WARRANTIES, CONDITIONS, OR IMPLIED TERM OF QUALITY, INCLUDING THE
+IMPLIED WARRANTIES OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY, AND
+FITNESS FOR A PARTICULAR PURPOSE.
+
+(2) TO THE MAXIMUM EXTENT PERMITTED BY LAW, UNDER NO CIRCUMSTANCES AND
+UNDER NO LEGAL THEORY, TORT, CONTRACT, OR OTHERWISE, SHALL PEDESTAL
+SOFTWARE BE LIABLE TO YOU OR ANY OTHER PERSON FOR ANY MONEY DAMAGES,
+WHETHER DIRECT, INDIRECT, SPECIAL, INCIDENTAL, COVER, RELIANCE OR
+CONSEQUENTIAL DAMAGES, EVEN IF PEDESTAL SOFTWARE SHALL HAVE BEEN
+INFORMED OF THE POSSIBILITY OF SUCH DAMAGES, OR FOR ANY CLAIM BY ANY
+OTHER PARTY. IN THE EVENT THAT NOTWITHSTANDING THE FOREGOING, PEDESTAL
+SOFTWARE IS FOUND LIABLE TO YOU FOR DAMAGES FROM ANY CAUSE WHATSOEVER,
+AND REGARDLESS OF THE FORM OF THE ACTION (WHETHER IN CONTRACT, TORT
+(INCLUDING NEGLIGENCE), PRODUCT LIABILITY OR OTHERWISE), PEDESTAL
+SOFTWARE'S LIABILITY TO YOU WILL BE LIMITED TO $0.01. SOME JURISDICTIONS
+DO NOT ALLOW THE EXCLUSION OR LIMITATION OF INCIDENTAL OR CONSEQUENTIAL
+DAMAGES, SO THIS LIMITATION AND EXCLUSION MAY NOT APPLY TO YOU.
+
+(3) Pedestal Software will not object to your distribution of complete,
+unmodified copies of the distribution package of the software as
+provided by Pedestal Software, PROVIDED that you do not charge a fee
+other than a reasonable fee for distribution services.
+
+(4) You may modify the software and distribute copies of the modified
+software, PROVIDED:
+
+(4.1) that you distribute, together with the executable code of the
+modified software:
+
+(4.1.1) the source code of the modified software, which must contain the
+Pedestal Software copyright notice set forth above (in addition to your
+own copyright notice if any); and
+
+(4.1.2) a copy of the complete, unmodified distribution package of the
+software as provided by Pedestal Software; and
+
+(4.2) that you clearly indicate in the source code and in any
+accompanying documentation file that the software is based on Pedestal
+Software's software and was modified by you; and
+
+(4.3) that you grant users of the modified software the same rights as
+are granted to you by this license.
+
+
+Who is Pedestal Software?
+-------------------------
+
+Pedestal Software is based near Boston, MA, and has been providing
+security software since 1996. Its founders come from the financial
+services and banking industries where security and system integrity
+are top priorities.
+
+On the web: http://www.pedestalsoftware.com
+email:      support@pedestalsoftware.com
+

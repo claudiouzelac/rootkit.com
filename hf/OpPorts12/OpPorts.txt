@@ -1,0 +1,16 @@
+Open Ports v1.2
+===============
+
+Open Ports as a part of Hacker Defender rootkit (http://rootkit.host.sk) by
+Holy_Father <holy_father@phreaker.net> & Ratter/29A <ratter@atlas.cz>
+Copyright (c) 2000,forever ExEwORx
+birthday: 29.06.2003
+home: http://rootkit.host.sk
+licence: this program is open source with GPL licence
+
+	Open Ports does almost the same as FPort by Foundstone, Inc. but 
+contains no code from that program. The main difference is that our Open Ports 
+is open source. Second difference is that Open Ports names object via driver.
+	This program enumerates the list of all open TCP and UDP ports in the 
+system and associates them with their host process.
+	Main program is written in Delphi 6, driver in C.
